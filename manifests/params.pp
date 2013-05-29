@@ -7,7 +7,7 @@ class intermapper::params {
 
   $package_name = $::osfamily ? {
     'Solaris' => 'DARTinter',
-    default   => 'intermapper',
+    default   => 'InterMapper',
   }
 
   $toolsdir = "$basedir/Tools"

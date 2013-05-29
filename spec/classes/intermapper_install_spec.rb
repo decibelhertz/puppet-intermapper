@@ -9,7 +9,7 @@ describe 'intermapper::install', :type => 'class' do
 
     it {
       should contain_package('intermapper').with ( {
-        'name' => 'intermapper',
+        'name' => 'InterMapper',
       } )
     }
 
