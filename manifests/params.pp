@@ -15,6 +15,11 @@ class intermapper::params {
     default   => 'InterMapper',
   }
 
+  $package_provider = $::osfamily ? {
+    'Solaris' => 'sun',
+    default   => undef,
+  }
+
   $service_name = $::osfamily ? {
     default => 'intermapperd',
   }
