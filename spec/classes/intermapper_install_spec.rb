@@ -10,7 +10,6 @@ describe 'intermapper::install', :type => 'class' do
     it {
       should contain_package('intermapper').with ( {
         'name' => 'intermapper',
-        'source' => 'http://download.dartware.com/im568/InterMapper-5.6.8-1.i386.4x.rpm'
       } )
     }
 
