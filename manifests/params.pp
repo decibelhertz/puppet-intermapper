@@ -20,4 +20,8 @@ class intermapper::params {
   }
 
   $toolsdir = "$basedir/Tools"
+
+  $dc_package_name = $::osfamily ? {
+    default => 'InterMapper-DataCenter',
+  }
 }
