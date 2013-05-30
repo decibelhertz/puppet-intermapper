@@ -10,7 +10,10 @@ describe 'intermapper::service', :type => 'class' do
     end
 
     it {
-      should contain_service('intermapperd').with_name('intermapperd')
+      should contain_service('intermapperd').with( {
+        'name' => 'intermapperd',
+        'provider' => nil,
+      } )
     }
   end
 
@@ -22,8 +25,10 @@ describe 'intermapper::service', :type => 'class' do
     end
 
     it {
-      should contain_service('intermapperd').with_name(
-        'lrc:/etc/rc3_d/S99intermapperd')
+      should contain_service('intermapperd').with( {
+        'name' => 'intermapperd',
+        'provider' => 'init',
+      } )
     }
   end
 

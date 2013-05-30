@@ -21,8 +21,12 @@ class intermapper::params {
   }
 
   $service_name = $::osfamily ? {
-    'Solaris' => 'lrc:/etc/rc3_d/S99intermapperd',
     default   => 'intermapperd',
+  }
+
+  $service_provider = $::osfamily ? {
+    'Solaris' => 'init',
+    default   => undef,
   }
 
   $toolsdir = "$basedir/Tools"
