@@ -13,6 +13,7 @@ describe 'intermapper::service', :type => 'class' do
       should contain_service('intermapperd').with( {
         'name' => 'intermapperd',
         'provider' => nil,
+        'status' => nil,
       } )
     }
   end
@@ -28,6 +29,7 @@ describe 'intermapper::service', :type => 'class' do
       should contain_service('intermapperd').with( {
         'name' => 'intermapperd',
         'provider' => 'init',
+        'status' => '/bin/pgrep intermapperd',
       } )
     }
   end

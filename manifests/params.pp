@@ -29,6 +29,11 @@ class intermapper::params {
     default   => undef,
   }
 
+  $service_status_cmd = $::osfamily ? {
+    'Solaris' => '/bin/pgrep',
+    default   => undef,
+  }
+
   $toolsdir = "$basedir/Tools"
 
   $dc_package_name = $::osfamily ? {
