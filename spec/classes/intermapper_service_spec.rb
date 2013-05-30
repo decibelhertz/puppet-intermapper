@@ -12,7 +12,19 @@ describe 'intermapper::service', :type => 'class' do
     it {
       should contain_service('intermapperd').with_name('intermapperd')
     }
+  end
 
+  context "On a Solaris OS" do
+    let :facts do
+      {
+        :osfamily => 'Solaris'
+      }
+    end
+
+    it {
+      should contain_service('intermapperd').with_name(
+        'lrc:/etc/rc3_d/S99intermapperd')
+    }
   end
 
 end
