@@ -6,8 +6,8 @@ class intermapper::params {
   }
 
   $settingsdir = $::osfamily ? {
-    'Solaris' => '/opt/intermapper/Intermapper_Settings',
-    default   => '/var/local/Intermapper_Settings',
+    'Solaris' => '/opt/intermapper/InterMapper_Settings',
+    default   => '/var/local/InterMapper_Settings',
   }
 
   $package_name = $::osfamily ? {
