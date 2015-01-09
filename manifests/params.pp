@@ -29,7 +29,10 @@ class intermapper::params {
     default   => undef,
   }
 
-  $service_status_cmd = "/usr/bin/pgrep ${service_name}"
+  $service_status_cmd = $::osfamily ? {
+    'Solaris' => "/usr/bin/pgrep ${service_name}",
+    default   => undef,
+  }
 
   $service_has_restart = $::osfamily ? {
     'Solaris' => false,
