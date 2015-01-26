@@ -1,8 +1,8 @@
 define intermapper::nagios_plugin_link (
-  $ensure = 'present'
+  $intermapper_toolsdir,
+  $nagios_pluginsdir,
+  $ensure = 'present',
 ){
-  include 'nrpe::params'
-  include 'intermapper::params'
 
   $manage_ensure = $ensure ? {
     'absent'  => 'absent',
@@ -11,10 +11,9 @@ define intermapper::nagios_plugin_link (
     default   => 'link',
   }
 
-  file { "${intermapper::params::toolsdir}/${name}" :
+  file { "${intermapper_toolsdir}/${name}" :
     ensure  => $manage_ensure,
-    source  => "${nrpe::params::pluginsdir}/${name}",
-    require => [ Class['nrpe'], Package['intermapper'] ],
+    source  => "${nagios_pluginsdir}/${name}",
   }
 
 }
