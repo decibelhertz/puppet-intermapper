@@ -7,7 +7,7 @@ describe 'intermapper::nagios_plugin_link', :type => :define do
     'nagios_plugins_dir' => npd,
   }
   let(:title) { t }
-  sourcefname="#{npd}/#{t}"
+  targetfname="#{npd}/#{t}"
   fname="/var/local/InterMapper_Settings/Tools/#{t}"
 
   ['CentOS', 'RedHat', 'Solaris'].each do |system|
@@ -31,8 +31,8 @@ describe 'intermapper::nagios_plugin_link', :type => :define do
       end
 
       {
-        :present => [:link, sourcefname],
-        :link    => [:link, sourcefname],
+        :present => [:link, targetfname],
+        :link    => [:link, targetfname],
         :absent  => [:absent, nil],
         :missing => [:absent, nil],
       }.each do |k,v|
@@ -43,7 +43,7 @@ describe 'intermapper::nagios_plugin_link', :type => :define do
           it do
             should contain_file(fname).with({
               :ensure => v[0],
-              :source => v[1],
+              :target => v[1],
             })
           end
         end
