@@ -23,6 +23,7 @@ describe 'intermapper', :type => :class do
       it { should contain_class('intermapper::install') }
       it { should contain_class('intermapper::nagios') }
       it { should contain_class('intermapper::service') }
+      it { should contain_class('intermapper::service_extra') }
 
       describe 'intermapper::install' do
         let(:params) {{
@@ -100,6 +101,52 @@ describe 'intermapper', :type => :class do
           it { should contain_service('intermapperd').with_ensure('stopped') }
         end
       end # describe intermapper::service
+
+      describe 'intermapper::service_extra' do
+        let(:params) {{
+          :service_imdc_name    => 'imdc',
+          :service_imflows_name => 'imflows',
+        }}
+        describe 'with defaults' do
+          it { should contain_service('imdc').with({
+            :hasstatus => true,
+            :ensure    => 'stopped',
+          }) }
+          it { should contain_service('imflows').with({
+            :hasstatus => true,
+            :ensure    => 'stopped',
+          }) }
+        end
+
+        describe 'service_manage when false' do
+          let(:params) {
+            super().merge({
+              :service_manage => false,
+            })
+          }
+          it { should_not contain_service('imdc') }
+          it { should_not contain_service('imflows') }
+        end
+
+        describe 'service_imdc_ensure when overridden' do
+          let(:params) {
+            super().merge({
+              :service_imdc_ensure => 'running',
+            })
+          }
+          it { should contain_service('imdc').with_ensure('running') }
+        end
+        describe 'service_imflows_ensure when overridden' do
+          let(:params) {
+            super().merge({
+              :service_imflows_ensure => 'running',
+            })
+          }
+          it { should contain_service('imflows').with_ensure('running') }
+        end
+      end # describe intermapper::service
+
+
 
       describe 'intermapper::nagios' do
         describe 'with defaults' do

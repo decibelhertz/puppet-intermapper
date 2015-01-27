@@ -1,16 +1,20 @@
 #
-# == define: intermapper::probe
+# == define: intermapper::tool
 #
-# Install a new Intermapper probe into Intermapper's Probes directory
+# Install a new Intermapper tool into Intermapper's Tools directory.
+#
+# InterMapper looks in the Tools directory for scripts if the path isn't
+# set in the probe definition. This is also a good place to put libraries that
+# probes may need.
 #
 # ===Parameters
 #
 # [*ensure*]
 #   works just like a file resource
 #
-# [*probename*]
-#   (namevar) The filename of the Intermapper Probe definition. Usually
-#   something like 'edu.ucsd.antelope.check_q330'
+# [*toolname*]
+#   (namevar) The filename of the Intermapper Tool. Usually
+#   something like 'edu.ucsd.antelope.check_q330' or 'nagios_q330_ping'
 #
 # [*target*]
 #   If ensure is set to link, then link_target is used as the target parameter
@@ -25,8 +29,11 @@
 #   The desired contents of a file, as a string. This attribute is mutually
 #   exclusive with source and target.
 #
-define intermapper::probe (
-  $probename = $title,
+# [*mode*]
+#   File mode, same format as a file resource.
+#
+define intermapper::tool (
+  $toolname = $title,
   $ensure = 'present',
   $target = undef,
   $source = undef,
@@ -36,9 +43,9 @@ define intermapper::probe (
 ) {
   include 'intermapper'
 
-  $probedir = "${intermapper::settingsdir}/Probes"
+  $toolsdir = "${intermapper::settingsdir}/Tools"
 
-  file { "${probedir}/${probename}" :
+  file { "${toolsdir}/${toolname}" :
     ensure  => $ensure,
     target  => $target,
     source  => $source,

@@ -23,15 +23,11 @@
 #   This is where Intermapper expects to find it's Settings directory, which
 #   in turn affects intermapper::toolsdir.
 #
-# TODO: refactor to use an as-yet-unwritten nagios::tool defined type instead
-# of calling the file resource directly.
-#
 define intermapper::nagios_plugin_link (
   $nagios_plugins_dir,
   $ensure = 'present',
 ){
 
-  include 'intermapper'
   $manage_ensure = $ensure ? {
     'absent'  => 'absent',
     'missing' => 'absent',
@@ -44,10 +40,9 @@ define intermapper::nagios_plugin_link (
     default => undef,
   }
 
-  file { "${intermapper::toolsdir}/${name}" :
+  intermapper::tool { $name:
     ensure => $manage_ensure,
     target => $manage_target,
-    notify => Class['::intermapper::service'],
   }
 
 }

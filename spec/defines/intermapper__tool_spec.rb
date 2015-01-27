@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'intermapper::probe', :type => :define do
-  t='edu.ucsd.testprobe'
-  td='/var/local/InterMapper_Settings/Probes' # assume it hasn't been overriden
+describe 'intermapper::tool', :type => :define do
+  t='edu.ucsd.testtool'
+  td='/var/local/InterMapper_Settings/Tools' # assume it hasn't been overriden
   fname="#{td}/#{t}"
   let(:title) { t }
 
@@ -21,19 +21,16 @@ describe 'intermapper::probe', :type => :define do
       end
 
       describe 'with defaults' do
-        it do
-          should contain_file(fname)\
+        it { should contain_file(fname)\
              .that_notifies('Class[intermapper::service]')\
              .that_requires('Class[intermapper::install]')\
-             .with({
-               :force   => nil,
-               :content => nil,
-               :source  => nil,
-               :target  => nil,
-               :owner   => 'intermapper',
-               :group   => 'intermapper',
-             })
-        end
+             .with_force(nil)\
+             .with_content(nil)\
+             .with_source(nil)\
+             .with_target(nil)\
+             .with_owner('intermapper')\
+             .with_group('intermapper')
+        }
       end
 
       describe 'force' do

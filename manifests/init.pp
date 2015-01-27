@@ -13,6 +13,12 @@
 #   /var/local on newer versions of intermapper, but old versions had this set
 #   to /usr/local
 #
+# [*owner*]
+#   The owner of any files that this module installs. Default: intermapper
+#
+# [*group*]
+#   The group of any files that this module installs. Default: intermapper
+#
 # [*package_ensure*]
 #   Defaults to 'present'. Can be set to a specific version of Intermapper,
 #   or to 'latest' to ensure the package is always upgraded.
@@ -36,8 +42,23 @@
 # [*service_manage*]
 #   Defaults to true. If false, the service is not managed.
 #
+# [*service_imdc_ensure*]
+#   Defaults to stopped. If service_manage is true, the Intermapper Datacenter
+#   services are set to this value.
+#
+# [*service_imflows_ensure*]
+#   Defaults to stopped. If service_manage is true, the IMFlows services are
+#   set to this value.
+#
 # [*service_name*]
-#   The name of the service(s) to managed. Defaults to "intermapperd"
+#   The name of the service(s) to manage. Defaults to "intermapperd"
+#
+# [*service_imdc_name*]
+#   The name of the InterMapper Datacenter service(s) to manage. Defaults to
+#   "imdc"
+#
+# [*service_imflows_name*]
+#   The name of the IMFlows service(s) to manage. Defaults to "imflows"
 #
 # [*service_provider*]
 #   Normally undefined, this is set to 'init' on Solaris platforms since
@@ -71,23 +92,37 @@
 #   A list of plugin names that should be symlinked from nagios_plugin_dir into
 #   $vardir/InterMapper_Settings/Tools for use by Intermapper probe definitions.
 #
+# ===Usage
+#
+# The classes intermapper::service, intermapper::service_extra,
+# intermapper::install, and intermapper::nagios are not intended to be called
+# directly outside of this module. They can be used as notifiers and
+# subscription points however, so probes can be installed and the
+# Class[intermapper::service] can be set to subscribe to the probe files.
+#
 class intermapper (
-  $basedir             = '/usr/local',
-  $vardir              = '/var/local',
-  $package_ensure      = 'present',
-  $package_manage      = true,
-  $package_name        = $intermapper::params::package_name,
-  $package_provider    = $intermapper::params::package_provider,
-  $service_ensure      = 'running',
-  $service_manage      = true,
-  $service_name        = $intermapper::params::service_name,
-  $service_provider    = $intermapper::params::service_provider,
-  $service_status_cmd  = $intermapper::params::service_status_cmd,
-  $service_has_restart = $intermapper::params::service_has_restart,
-  $nagios_ensure       = 'present',
-  $nagios_manage       = false,
-  $nagios_plugins_dir  = 'UNSET',
-  $nagios_link_plugins = $intermapper::params::nagios_link_plugins,
+  $basedir                = '/usr/local',
+  $vardir                 = '/var/local',
+  $owner                  = 'intermapper',
+  $group                  = 'intermapper',
+  $package_ensure         = 'present',
+  $package_manage         = true,
+  $package_name           = $intermapper::params::package_name,
+  $package_provider       = $intermapper::params::package_provider,
+  $service_manage         = true,
+  $service_ensure         = 'running',
+  $service_imdc_ensure    = 'stopped',
+  $service_imflows_ensure = 'stopped',
+  $service_name           = $intermapper::params::service_name,
+  $service_imdc_name      = 'imdc',
+  $service_imflows_name   = 'imflows',
+  $service_provider       = $intermapper::params::service_provider,
+  $service_status_cmd     = $intermapper::params::service_status_cmd,
+  $service_has_restart    = $intermapper::params::service_has_restart,
+  $nagios_ensure          = 'present',
+  $nagios_manage          = false,
+  $nagios_plugins_dir     = 'UNSET',
+  $nagios_link_plugins    = $intermapper::params::nagios_link_plugins,
 ) inherits intermapper::params {
   validate_bool($nagios_manage)
   validate_bool($package_manage)
@@ -109,5 +144,6 @@ class intermapper (
   class {'::intermapper::install': } ->
   class {'::intermapper::nagios': } ~>
   class {'::intermapper::service': } ->
+  class {'::intermapper::service_extra': } ->
   anchor {'intermapper::end': }
 }
