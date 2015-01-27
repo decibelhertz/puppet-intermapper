@@ -73,7 +73,7 @@
 #
 class intermapper (
   $basedir             = '/usr/local',
-  $vardir              = $intermapper::params::vardir,
+  $vardir              = '/var/local',
   $package_ensure      = 'present',
   $package_manage      = true,
   $package_name        = $intermapper::params::package_name,

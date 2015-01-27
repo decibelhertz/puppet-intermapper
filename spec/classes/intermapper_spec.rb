@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'intermapper', :type => 'class' do
+describe 'intermapper', :type => :class do
 
   ['CentOS', 'RedHat', 'Solaris'].each do |system|
     context "when on system #{system}" do
