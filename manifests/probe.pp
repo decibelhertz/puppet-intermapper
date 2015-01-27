@@ -31,6 +31,7 @@ define intermapper::probe (
   $target = undef,
   $source = undef,
   $content = undef,
+  $force = undef,
 ) {
   include 'intermapper'
 
@@ -41,6 +42,7 @@ define intermapper::probe (
     target  => $target,
     source  => $source,
     content => $content,
+    force   => $force,
     require => Class['intermapper::install'],
     notify  => Class['intermapper::service'],
   }

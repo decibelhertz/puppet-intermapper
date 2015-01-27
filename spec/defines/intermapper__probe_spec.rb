@@ -23,8 +23,62 @@ describe 'intermapper::probe', :type => :define do
       describe 'with defaults' do
         it { should contain_file(fname)\
              .that_notifies('Class[intermapper::service]')\
-             .that_requires('Class[intermapper::install]')
+             .that_requires('Class[intermapper::install]')\
+             .with_force(nil)\
+             .with_content(nil)\
+             .with_source(nil)\
+             .with_target(nil)
         }
+      end
+
+      describe 'force' do
+        [true, false].each do |tf|
+          describe "is #{tf}" do
+            let(:params) {{
+              :force => tf,
+            }}
+            it { should contain_file(fname).with_force(tf) }
+          end
+        end
+      end
+
+      describe 'content is set' do
+        c = 'This is probe content'
+        let(:params) {{
+          :content => c,
+        }}
+        it { should contain_file(fname).with_content(c) }
+      end
+
+      describe 'source is set' do
+        s = '/tmp/testfile'
+        let(:params) {{
+          :source => s,
+        }}
+        it { should contain_file(fname).with_source(s) }
+      end
+
+      describe 'linking' do
+        tgt = '/tmp/sourcefile'
+
+        describe 'with ensure == link and target set' do
+          let(:params) {{
+            :ensure => 'link',
+            :target => tgt,
+          }}
+          it { should contain_file(fname).with({
+            :ensure => 'link',
+            :target => tgt,
+          }) }
+        end
+
+        describe 'with ensure set to link target' do
+          let(:params) {{
+            :ensure => tgt,
+          }}
+          it { should contain_file(fname).with_ensure(tgt) }
+        end
+
       end
 
     end # on system
