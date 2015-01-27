@@ -80,7 +80,7 @@ class intermapper (
   $package_provider    = $intermapper::params::package_provider,
   $service_ensure      = 'running',
   $service_manage      = true,
-  $service_name        = 'intermapperd',
+  $service_name        = $intermapper::params::service_name,
   $service_provider    = $intermapper::params::service_provider,
   $service_status_cmd  = $intermapper::params::service_status_cmd,
   $service_has_restart = $intermapper::params::service_has_restart,
