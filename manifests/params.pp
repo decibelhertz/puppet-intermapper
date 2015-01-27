@@ -1,15 +1,5 @@
 class intermapper::params {
 
-  $basedir = $::osfamily ? {
-    'Solaris' => '/opt/intermapper',
-    default   => '/usr/local',
-  }
-
-  $settingsdir = $::osfamily ? {
-    'Solaris' => '/opt/intermapper/InterMapper_Settings',
-    default   => '/var/local/InterMapper_Settings',
-  }
-
   $package_name = $::osfamily ? {
     'Solaris' => 'DARTinter',
     default   => 'InterMapper',
@@ -20,9 +10,7 @@ class intermapper::params {
     default   => undef,
   }
 
-  $service_name = $::osfamily ? {
-    default   => 'intermapperd',
-  }
+  $service_name = 'intermapperd'
 
   $service_provider = $::osfamily ? {
     'Solaris' => 'init',
@@ -39,9 +27,17 @@ class intermapper::params {
     default   => true,
   }
 
-  $toolsdir = "$basedir/Tools"
+  $nagios_link_plugins = [
+    'check_nrpe',
+    'check_disk',
+    'check_file_age',
+    'check_icmp',
+    'check_mailq',
+    'check_tcp',
+    'check_udp',
+    'check_ftp',
+    'check_procs',
+    'check_snmp',
+  ]
 
-  $dc_package_name = $::osfamily ? {
-    default => 'InterMapper-DataCenter',
-  }
 }
