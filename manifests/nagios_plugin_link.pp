@@ -20,7 +20,8 @@
 # The intermapper class takes a few parameters that affect the operation of
 # this defined type, notably:
 # [*intermapper::vardir*]
-#   This is where Intermapper expects to it's Settings directory
+#   This is where Intermapper expects to find it's Settings directory, which
+#   in turn affects intermapper::toolsdir.
 #
 define intermapper::nagios_plugin_link (
   $nagios_plugins_dir,
