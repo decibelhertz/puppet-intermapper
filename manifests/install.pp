@@ -4,9 +4,9 @@ class intermapper::install {
 
   if $::intermapper::package_manage {
     package { $::intermapper::package_name :
+      ensure   => $::intermapper::package_ensure,
       source   => $::intermapper::package_source,
       provider => $::intermapper::package_provider,
-      ensure   => $::intermapper::package_ensure,
     }
   }
 
