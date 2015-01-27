@@ -26,8 +26,8 @@ describe 'intermapper::nagios_plugin_link', :type => :define do
       end
 
       describe 'with defaults' do
-        it { should contain_file(fname
-                                ).that_notifies('Class[intermapper::service]') }
+        it { should contain_file(fname)\
+             .that_notifies('Class[intermapper::service]') }
       end
 
       {
