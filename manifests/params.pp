@@ -10,10 +10,6 @@ class intermapper::params {
     default   => undef,
   }
 
-  $service_name = $::osfamily ? {
-    default   => 'intermapperd',
-  }
-
   $service_provider = $::osfamily ? {
     'Solaris' => 'init',
     default   => undef,
