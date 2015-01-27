@@ -1,15 +1,5 @@
 class intermapper::params {
 
-  $basedir = $::osfamily ? {
-    'Solaris' => '/opt/intermapper',
-    default   => '/usr/local',
-  }
-
-  $settingsdir = $::osfamily ? {
-    'Solaris' => '/opt/intermapper/InterMapper_Settings',
-    default   => '/var/local/InterMapper_Settings',
-  }
-
   $package_name = $::osfamily ? {
     'Solaris' => 'DARTinter',
     default   => 'InterMapper',
@@ -38,8 +28,6 @@ class intermapper::params {
     'Solaris' => false,
     default   => true,
   }
-
-  $toolsdir = "${basedir}/Tools"
 
   $nagios_link_plugins = [
     'check_nrpe',

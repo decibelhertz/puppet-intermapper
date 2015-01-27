@@ -1,6 +1,21 @@
+#
+# == Class: intermapper
+#
+# Manage the Intermapper network monitoring package by Help/Systems
+#
+# === Parameters
+# [*basedir*]
+#   The base directory where Intermapper is installed. Defaults to /usr/local
+#   by the package. Useful if the package has been relocated
+#
+# [*vardir*]
+#   The directory that contains the InterMapper_Settings directory. Typically
+#   /var/local on newer versions of intermapper, but old versions had this set
+#   to /usr/local
+#
 class intermapper (
-  $basedir             = $intermapper::params::basedir,
-  $settingsdir         = $intermapper::params::settingsdir,
+  $basedir             = '/usr/local',
+  $vardir              = $intermapper::params::vardir,
   $package_ensure      = 'present',
   $package_manage      = true,
   $package_name        = $intermapper::params::package_name,
@@ -11,7 +26,6 @@ class intermapper (
   $service_provider    = $intermapper::params::service_provider,
   $service_status_cmd  = $intermapper::params::service_status_cmd,
   $service_has_restart = $intermapper::params::service_has_restart,
-  $toolsdir            = $intermapper::params::toolsdir,
   $nagios_ensure       = 'present',
   $nagios_manage       = false,
   $nagios_plugins_dir  = 'UNSET',
@@ -30,6 +44,8 @@ class intermapper (
     }
   }
 
+  $settingsdir="${vardir}/InterMapper_Settings"
+  $toolsdir="${settingsdir}/Tools"
 
   anchor {'intermapper::begin': } ->
   class {'::intermapper::install': } ->
