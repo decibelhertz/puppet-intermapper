@@ -1,27 +1,19 @@
-# Plugins that should be linked from the main Nagios plugin directory to Intermapper's Tools directory
-class intermapper::nagios (
-  $link_plugins = [
-    'check_nrpe',
-    'check_disk',
-    'check_file_age',
-    'check_icmp',
-    'check_mailq',
-    'check_tcp',
-    'check_udp',
-    'check_ftp',
-    'check_procs',
-    'check_snmp',
-  ]
-){
+# Plugins that should be linked from the main Nagios plugin directory to
+# Intermapper's Tools directory
+# Requires intermapper::nagios_link_plugins and intermapper::nagios_pluginsdir
+# to be set
+class intermapper::nagios {
+  # TODO: Consider making this class private?
+  #private("Only should be called from the ${module_name} module")
 
-  include 'nrpe::params'
-  include 'intermapper::params'
-  ### Class internal variables
-
-  ### Managed resources
-  intermapper::nagios_plugin_link{ $link_plugins :
-    intermapper_toolsdir=$intermapper::params::toolsdir,
-    nagios_pluginsdir=$nrpe::params::pluginsdir,
-    require => [ Class['nrpe'], Package['intermapper'] ],
+  if $intermapper::nagios_manage {
+    $manage_npdir = $intermapper::nagios_plugins_dir ? {
+      'UNSET'     => undef,
+      default     => $intermapper::nagios_plugins_dir,
+    }
+    intermapper::nagios_plugin_link{ $intermapper::nagios_link_plugins :
+      ensure             => $intermapper::nagios_ensure,
+      nagios_plugins_dir => $manage_npdir,
+    }
   }
 }

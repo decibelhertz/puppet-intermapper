@@ -39,9 +39,19 @@ class intermapper::params {
     default   => true,
   }
 
-  $toolsdir = "$basedir/Tools"
+  $toolsdir = "${basedir}/Tools"
 
-  $dc_package_name = $::osfamily ? {
-    default => 'InterMapper-DataCenter',
-  }
+  $nagios_link_plugins = [
+    'check_nrpe',
+    'check_disk',
+    'check_file_age',
+    'check_icmp',
+    'check_mailq',
+    'check_tcp',
+    'check_udp',
+    'check_ftp',
+    'check_procs',
+    'check_snmp',
+  ]
+
 }
