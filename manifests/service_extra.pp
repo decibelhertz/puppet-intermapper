@@ -10,20 +10,40 @@ class intermapper::service_extra {
   # TODO: Consider making this class private?
   #private("Only should be called from the ${module_name} module")
 
+  $manage_imflows_enable = $intermapper::service_imflows_ensure ? {
+    true      => true,
+    'running' => true,
+    false     => false,
+    'stopped' => false,
+  }
+
+  $manage_imdc_enable = $intermapper::service_imdc_ensure ? {
+    true      => true,
+    'running' => true,
+    false     => false,
+    'stopped' => false,
+  }
+
   if $::intermapper::service_manage {
-    service { $intermapper::service_imflows_name :
-      ensure     => $intermapper::service_imflows_ensure,
-      provider   => $intermapper::service_provider,
-      status     => $intermapper::service_status_cmd,
-      hasstatus  => true,
-      hasrestart => $intermapper::service_has_restart,
+    if $::intermapper::service_imflows_manage {
+      service { $intermapper::service_imflows_name :
+        ensure     => $intermapper::service_imflows_ensure,
+        enable     => $manage_imflows_enable,
+        provider   => $intermapper::service_provider,
+        status     => $intermapper::service_status_cmd,
+        hasstatus  => true,
+        hasrestart => $intermapper::service_has_restart,
+      }
     }
-    service { $intermapper::service_imdc_name :
-      ensure     => $intermapper::service_imdc_ensure,
-      provider   => $intermapper::service_provider,
-      status     => $intermapper::service_status_cmd,
-      hasstatus  => true,
-      hasrestart => $intermapper::service_has_restart,
+    if $::intermapper::service_imdc_manage {
+      service { $intermapper::service_imdc_name :
+        ensure     => $intermapper::service_imdc_ensure,
+        enable     => $manage_imdc_enable,
+        provider   => $intermapper::service_provider,
+        status     => $intermapper::service_status_cmd,
+        hasstatus  => true,
+        hasrestart => $intermapper::service_has_restart,
+      }
     }
   }
 }

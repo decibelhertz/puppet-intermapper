@@ -40,7 +40,18 @@
 #   service resource type.
 #
 # [*service_manage*]
-#   Defaults to true. If false, the service is not managed.
+#   Defaults to true. If false, none of the services are managed. Disables
+#   service_extra_manage.
+#
+# [*service_imdc_manage*]
+#   Controls whether the extra service imdc is managed. Dependent
+#   on service_manage being true. Defaults to true. If false, the extra
+#   service imdc is not managed.
+#
+# [*service_imflows_manage*]
+#   Controls whether the extra service imflows is managed. Dependent
+#   on service_manage being true. Defaults to true. If false, the extra
+#   service imflows is not managed.
 #
 # [*service_imdc_ensure*]
 #   Defaults to stopped. If service_manage is true, the Intermapper Datacenter
@@ -110,6 +121,8 @@ class intermapper (
   $package_name           = $intermapper::params::package_name,
   $package_provider       = $intermapper::params::package_provider,
   $service_manage         = true,
+  $service_imdc_manage    = true,
+  $service_imflows_manage = true,
   $service_ensure         = 'running',
   $service_imdc_ensure    = 'stopped',
   $service_imflows_ensure = 'stopped',

@@ -82,6 +82,7 @@ describe 'intermapper', :type => :class do
           it { should contain_service('intermapperd').with({
             :hasstatus => true,
             :ensure    => 'running',
+            :enable    => true,
           }) }
         end
 
@@ -98,7 +99,10 @@ describe 'intermapper', :type => :class do
             :service_name   => 'intermapperd',
             :service_ensure => 'stopped',
           }}
-          it { should contain_service('intermapperd').with_ensure('stopped') }
+          it { should contain_service('intermapperd')\
+               .with_ensure('stopped')\
+               .with_enable(false)
+          }
         end
       end # describe intermapper::service
 
@@ -111,21 +115,67 @@ describe 'intermapper', :type => :class do
           it { should contain_service('imdc').with({
             :hasstatus => true,
             :ensure    => 'stopped',
+            :enable    => false,
           }) }
           it { should contain_service('imflows').with({
             :hasstatus => true,
             :ensure    => 'stopped',
+            :enable    => false,
           }) }
         end
 
-        describe 'service_manage when false' do
-          let(:params) {
-            super().merge({
-              :service_manage => false,
-            })
-          }
-          it { should_not contain_service('imdc') }
-          it { should_not contain_service('imflows') }
+        describe 'service_manage' do
+          describe 'when false' do
+            let(:params) {
+              super().merge({
+                :service_manage => false,
+              })
+            }
+            it { should_not contain_service('imdc') }
+            it { should_not contain_service('imflows') }
+
+            describe 'and extra services manage is true' do
+              let(:params) {
+                super().merge({
+                  :service_imdc_manage    => true,
+                  :service_imflows_manage => true,
+                })
+              }
+
+              it { should_not contain_service('imdc') }
+              it { should_not contain_service('imflows') }
+            end
+          end
+
+          describe 'when true' do
+            let(:params) {
+              super().merge({
+                :service_manage => true,
+              })
+            }
+            describe 'and extra services manage is false' do
+              let(:params) {
+                super().merge({
+                  :service_imdc_manage    => false,
+                  :service_imflows_manage => false,
+                })
+              }
+              it { should_not contain_service('imdc') }
+              it { should_not contain_service('imflows') }
+            end
+
+            describe 'and extra services manage is true' do
+              let(:params) {
+                super().merge({
+                  :service_imdc_manage    => true,
+                  :service_imflows_manage => true,
+                })
+              }
+
+              it { should contain_service('imdc') }
+              it { should contain_service('imflows') }
+            end
+          end
         end
 
         describe 'service_imdc_ensure when overridden' do
@@ -134,7 +184,10 @@ describe 'intermapper', :type => :class do
               :service_imdc_ensure => 'running',
             })
           }
-          it { should contain_service('imdc').with_ensure('running') }
+          it { should contain_service('imdc')\
+               .with_ensure('running')\
+               .with_enable(true)
+          }
         end
         describe 'service_imflows_ensure when overridden' do
           let(:params) {
@@ -142,11 +195,12 @@ describe 'intermapper', :type => :class do
               :service_imflows_ensure => 'running',
             })
           }
-          it { should contain_service('imflows').with_ensure('running') }
+          it { should contain_service('imflows')\
+               .with_ensure('running')\
+               .with_enable(true)
+          }
         end
       end # describe intermapper::service
-
-
 
       describe 'intermapper::nagios' do
         describe 'with defaults' do
