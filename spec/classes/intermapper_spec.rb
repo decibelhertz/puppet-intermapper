@@ -215,9 +215,7 @@ describe 'intermapper', :type => :class do
                 :nagios_manage => true,
                 :nagios_ensure => 'present',
               }}
-              it { expect { should compile }.to raise_error(
-                Puppet::Error, /must be specified/)
-              }
+              it { should raise_error( Puppet::Error, /must be specified/) }
             end
 
             describe 'with nagios_ensure == present and plugins dir set' do
