@@ -1,0 +1,24 @@
+{
+	"name": "UCSDANF-intermapper",
+	"version": "1.0.0",
+	"author": "Geoff Davis",
+	"license": "BSD",
+	"summary": "Manage InterMapper by HelpSystems",
+	"source": "https://github.com/UCSD-ANF/puppet-intermapper",
+	"project_page": "https://github.com/UCSD-ANF/puppet-intermapper",
+	"issues_url": "https://github.com/UCSD-ANF/puppet-intermapper/issues",
+	"tags": ["intermapper", "monitoring"],
+	"operatingsystem_support": [
+		{
+			"operatingsystem":"RedHat",
+			"operatingsystemrelease":[ "6.0", "7.0" ]
+		},
+		{
+			"operatingsystem":"CentOS",
+			"operatingsystemrelease":[ "6.0", "7.0" ]
+		}
+	],
+	"dependencies": [
+		{ "name": "puppetlabs/stdlib", "version_requirement": ">= 3.2.0 < 5.0.0" }
+	]
+}
