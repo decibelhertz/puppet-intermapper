@@ -33,3 +33,5 @@ gem 'puppet-lint'
 gem 'puppetlabs_spec_helper'
 gem 'git', '>= 1.2.6'
 gem 'ci_reporter_rspec'
+
+gem 'generate-puppetfile'
