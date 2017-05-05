@@ -6,3 +6,5 @@ require 'ci/reporter/rake/rspec'
 PuppetLint.configuration.send('relative')
 PuppetLint.configuration.send('disable_documentation')
 PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "pkg/**/*.pp"]
+
+task :spec => 'ci:setup:rspec'
