@@ -1,6 +1,6 @@
 {
 	"name": "UCSDANF-intermapper",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"author": "Geoff Davis",
 	"license": "BSD",
 	"summary": "Manage InterMapper by HelpSystems",
