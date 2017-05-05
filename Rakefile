@@ -7,4 +7,5 @@ PuppetLint.configuration.send('relative')
 PuppetLint.configuration.send('disable_documentation')
 PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "pkg/**/*.pp"]
 
-task :spec => 'ci:setup:rspec'
+task :spec  => 'ci:setup:rspec'
+task :clean => 'ci:setup:spec_report_cleanup'
