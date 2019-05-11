@@ -1,0 +1,49 @@
+---
+intermapper::basedir: '/usr/local'
+intermapper::conffile: '/usr/local/etc/intermapperd.conf'
+intermapper::conf_user: 'intermapper'
+intermapper::conf_group: 'intermapper'
+intermapper::conf_pidfile:
+intermapper::conf_settingsfolder:
+intermapper::conf_fontfolder:
+intermapper::conf_listen:
+intermapper::group: 'intermapper'
+intermapper::intermapper_icons: {}
+intermapper::intermapper_files: {}
+intermapper::intermapper_mibfiles: {}
+intermapper::intermapper_probes: {}
+intermapper::intermapper_tools: {}
+intermapper::nagios_ensure: 'present'
+intermapper::nagios_link_plugins:
+  - 'check_disk'
+  - 'check_file_age'
+  - 'check_ftp'
+  - 'check_icmp'
+  - 'check_mailq'
+  - 'check_nrpe'
+  - 'check_procs'
+  - 'check_snmp'
+  - 'check_tcp'
+  - 'check_udp'
+intermapper::nagios_manage: false
+intermapper::nagios_plugins_dir:
+intermapper::owner: 'intermapper'
+intermapper::package_ensure: 'present'
+intermapper::package_manage: true
+intermapper::package_name: 'InterMapper'
+intermapper::package_provider:
+intermapper::package_source:
+intermapper::service_ensure: 'running'
+intermapper::service_has_restart: true
+intermapper::service_imdc_ensure: 'stopped'
+intermapper::service_imdc_manage: true
+intermapper::service_imdc_name: 'imdc'
+intermapper::service_imflows_ensure: 'stopped'
+intermapper::service_imflows_manage: true
+intermapper::service_imflows_name: 'imflows'
+intermapper::service_manage: true
+intermapper::service_name: 'intermapperd'
+intermapper::service_provider:
+intermapper::service_status_cmd:
+intermapper::vardir: '/var/local'
+...
