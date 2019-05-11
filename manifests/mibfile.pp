@@ -24,30 +24,26 @@
 #   The desired contents of a file, as a string. This attribute is mutually
 #   exclusive with source and target.
 #
-
-define intermapper::mibfile (
-  $mibname = $title,
-  $ensure  = 'present',
-  $target  = undef,
-  $source  = undef,
-  $content = undef,
-  $force   = undef,
-  $mode    = undef,
+define intermapper::mibfile(
+  Enum[file,link,absent] $ensure = 'file',
+  String $mibname = $title,
+  Optional[String] $target = undef,
+  Optional[String] $source = undef,
+  Optional[String] $content = undef,
+  Optional[Boolean] $force = undef,
+  Optional[String] $mode = undef,
+  Optional[Boolean] $recurse = undef,
 ) {
   include 'intermapper'
 
-  $mibdir = "${intermapper::settingsdir}/MIB Files"
-
-  file { "${mibdir}/${mibname}" :
-    ensure  => $ensure,
-    target  => $target,
-    source  => $source,
-    content => $content,
-    force   => $force,
-    mode    => $mode,
-    owner   => $intermapper::owner,
-    group   => $intermapper::group,
-    require => Class['intermapper::install'],
-    notify  => Class['intermapper::service'],
+  intermapper::file { "MIB Files/${mibname}":
+    ensure   => $ensure,
+    filetype => 'mibfile',
+    target   => $target,
+    source   => $source,
+    content  => $content,
+    force    => $force,
+    mode     => $mode,
+    recurse  => $recurse,
   }
 }

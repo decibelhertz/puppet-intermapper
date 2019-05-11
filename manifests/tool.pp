@@ -13,7 +13,7 @@
 #   works just like a file resource
 #
 # [*toolname*]
-#   (namevar) The filename of the Intermapper Tool. Usually
+#   (namevar) The filename of the Intermapper Tools definition. Usually
 #   something like 'edu.ucsd.antelope.check_q330' or 'nagios_q330_ping'
 #
 # [*target*]
@@ -32,29 +32,25 @@
 # [*mode*]
 #   File mode, same format as a file resource.
 #
-define intermapper::tool (
-  $toolname = $title,
-  $ensure = 'present',
-  $target = undef,
-  $source = undef,
-  $content = undef,
-  $force = undef,
-  $mode = undef,
+define intermapper::tool(
+  Enum[file,absent] $ensure = 'file',
+  String $toolname = $title,
+  Optional[String] $target = undef,
+  Optional[String] $source = undef,
+  Optional[String] $content = undef,
+  Optional[Boolean] $force = undef,
+  Optional[String] $mode = undef,
+  Optional[Boolean] $recurse = undef,
 ) {
-  include 'intermapper'
 
-  $toolsdir = "${intermapper::settingsdir}/Tools"
-
-  file { "${toolsdir}/${toolname}" :
-    ensure  => $ensure,
-    target  => $target,
-    source  => $source,
-    content => $content,
-    force   => $force,
-    mode    => $mode,
-    owner   => $intermapper::owner,
-    group   => $intermapper::group,
-    require => Class['intermapper::install'],
-    notify  => Class['intermapper::service'],
+  intermapper::file { $toolname :
+    ensure   => $ensure,
+    filetype => 'tool',
+    target   => $target,
+    source   => $source,
+    content  => $content,
+    force    => $force,
+    mode     => $mode,
+    recurse  => $recurse,
   }
 }

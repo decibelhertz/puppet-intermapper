@@ -1,20 +1,16 @@
 #
-# == define: intermapper::tool
+# == define: intermapper::icon
 #
-# Install a new Intermapper tool into Intermapper's Tools directory.
-#
-# InterMapper looks in the Tools directory for scripts if the path isn't
-# set in the probe definition. This is also a good place to put libraries that
-# probes may need.
+# Install a new Intermapper icon into Intermapper's Icons directory
 #
 # ===Parameters
 #
 # [*ensure*]
 #   works just like a file resource
 #
-# [*toolname*]
-#   (namevar) The filename of the Intermapper Tool. Usually
-#   something like 'edu.ucsd.antelope.check_q330' or 'nagios_q330_ping'
+# [*iconname*]
+#   (namevar) The filename of the Intermapper Icons definition. Usually
+#   something like 'edu.ucsd.antelope.check_q330'
 #
 # [*target*]
 #   If ensure is set to link, then link_target is used as the target parameter
@@ -29,32 +25,25 @@
 #   The desired contents of a file, as a string. This attribute is mutually
 #   exclusive with source and target.
 #
-# [*mode*]
-#   File mode, same format as a file resource.
-#
-define intermapper::icon (
-  $iconname = $title,
-  $ensure = 'present',
-  $target = undef,
-  $source = undef,
-  $content = undef,
-  $force = undef,
-  $mode = undef,
+define intermapper::icon(
+  Enum[file,link,absent] $ensure = 'file',
+  String $iconname = $title,
+  Optional[String] $target = undef,
+  Optional[String] $source = undef,
+  Optional[String] $content = undef,
+  Optional[Boolean] $force = undef,
+  Optional[String] $mode = undef,
+  Optional[Boolean] $recurse = undef,
 ) {
-  include 'intermapper'
 
-  $iconsdir = "${intermapper::settingsdir}/Custom Icons"
-
-  file { "${iconsdir}/${iconname}" :
-    ensure  => $ensure,
-    target  => $target,
-    source  => $source,
-    content => $content,
-    force   => $force,
-    mode    => $mode,
-    owner   => $intermapper::owner,
-    group   => $intermapper::group,
-    require => Class['intermapper::install'],
-    notify  => Class['intermapper::service'],
+  intermapper::file { $iconname :
+    ensure   => $ensure,
+    filetype => 'icon',
+    target   => $target,
+    source   => $source,
+    content  => $content,
+    force    => $force,
+    mode     => $mode,
+    recurse  => $recurse,
   }
 }

@@ -25,29 +25,25 @@
 #   The desired contents of a file, as a string. This attribute is mutually
 #   exclusive with source and target.
 #
-define intermapper::probe (
-  $probename = $title,
-  $ensure = 'present',
-  $target = undef,
-  $source = undef,
-  $content = undef,
-  $force = undef,
-  $mode = undef,
+define intermapper::probe(
+  Enum[file,absent] $ensure = 'file',
+  String $probename = $title,
+  Optional[String] $target = undef,
+  Optional[String] $source = undef,
+  Optional[String] $content = undef,
+  Optional[Boolean] $force = undef,
+  Optional[String] $mode = undef,
+  Optional[Boolean] $recurse = undef,
 ) {
-  include 'intermapper'
 
-  $probedir = "${intermapper::settingsdir}/Probes"
-
-  file { "${probedir}/${probename}" :
-    ensure  => $ensure,
-    target  => $target,
-    source  => $source,
-    content => $content,
-    force   => $force,
-    mode    => $mode,
-    owner   => $intermapper::owner,
-    group   => $intermapper::group,
-    require => Class['intermapper::install'],
-    notify  => Class['intermapper::service'],
+  intermapper::file { $probename :
+    ensure   => $ensure,
+    filetype => 'probe',
+    target   => $target,
+    source   => $source,
+    content  => $content,
+    force    => $force,
+    mode     => $mode,
+    recurse  => $recurse,
   }
 }
