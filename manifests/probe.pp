@@ -1,49 +1,83 @@
 #
 # == define: intermapper::probe
 #
-# Install a new Intermapper probe into Intermapper's Probes directory
+# Install a new Intermapper probe into Intermapper's Icons directory
 #
 # ===Parameters
 #
 # [*ensure*]
-#   works just like a file resource
+#   Same as file resource. The InterMapper Probes dir is flat, however,
+#   so ensure => directory is not permitted.
 #
 # [*probename*]
-#   (namevar) The filename of the Intermapper Probe definition. Usually
+#   (namevar) The filename of the Intermapper Icons definition. Usually
 #   something like 'edu.ucsd.antelope.check_q330'
 #
-# [*target*]
-#   If ensure is set to link, then link_target is used as the target parameter
-#   for the underlying file resource. This attribute is mutually exclusive with
-#   source and content.
-#
-# [*source*]
-#   The source for the file, as a Puppet resource path. This attribute is
-#   mutally exclusive with soruce and target.
-#
-# [*content*]
-#   The desired contents of a file, as a string. This attribute is mutually
-#   exclusive with source and target.
-#
+# [*all other parameters*]
+#   Same as file resource per https://puppet.com/docs/puppet/5.5/types/file.html
 define intermapper::probe(
-  Enum[file,absent] $ensure = 'file',
+  Enum['file', 'link', 'absent'] $ensure = 'file',
   String $probename = $title,
-  Optional[String] $target = undef,
-  Optional[String] $source = undef,
+  Optional $backup = undef,
+  Optional $checksum = undef,
+  Optional $checksum_value = undef,
   Optional[String] $content = undef,
-  Optional[Boolean] $force = undef,
-  Optional[String] $mode = undef,
-  Optional[Boolean] $recurse = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $force = undef,
+  Optional $ignore = undef,
+  Optional[Enum['follow','manage']] $links = undef,
+  Optional[String] $mode = '0644',
+  Optional[Stdlib::Absolutepath] $path = undef,
+  Optional $provider = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $purge = undef,
+  Optional[Variant[Boolean,Enum['remote']]] $recurse = undef,
+  Optional $recurselimit = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $replace = undef,
+  Optional[Boolean] $selinux_ignore_defaults = undef,
+  Optional $selrange = undef,
+  Optional $selrole = undef,
+  Optional $seltype = undef,
+  Optional $seluser = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $show_diff = undef,
+  Optional[String] $source = undef,
+  Optional[Enum['use','use_when_creating','ignore']] $source_permissions = undef,
+  Optional[Enum['first','all']] $sourceselect = undef,
+  Optional[String] $target = undef,
+  Optional $validate_cmd = undef,
+  Optional $validate_replacement = undef,
 ) {
+  include 'intermapper'
 
-  intermapper::file { $probename :
-    ensure   => $ensure,
-    filetype => 'probe',
-    target   => $target,
-    source   => $source,
-    content  => $content,
-    force    => $force,
-    mode     => $mode,
-    recurse  => $recurse,
+  file { "${intermapper::settingsdir}/Probes/${probename}":
+    ensure                  => $ensure,
+    backup                  => $backup,
+    checksum                => $checksum,
+    checksum_value          => $checksum_value,
+    content                 => $content,
+    force                   => $force,
+    group                   => $intermapper::group,
+    ignore                  => $ignore,
+    links                   => $links,
+    mode                    => $mode,
+    owner                   => $intermapper::owner,
+    path                    => $path,
+    provider                => $provider,
+    purge                   => $purge,
+    recurse                 => $recurse,
+    recurselimit            => $recurselimit,
+    replace                 => $replace,
+    selinux_ignore_defaults => $selinux_ignore_defaults,
+    selrange                => $selrange,
+    selrole                 => $selrole,
+    seltype                 => $seltype,
+    seluser                 => $seluser,
+    show_diff               => $show_diff,
+    source                  => $source,
+    source_permissions      => $source_permissions,
+    sourceselect            => $sourceselect,
+    target                  => $target,
+    validate_cmd            => $validate_cmd,
+    validate_replacement    => $validate_replacement,
+    require                 => Class['intermapper::install'],
+    notify                  => Class['intermapper::service'],
   }
 }

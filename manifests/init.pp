@@ -103,6 +103,14 @@
 #   A list of plugin names that should be symlinked from nagios_plugin_dir into
 #   $vardir/InterMapper_Settings/Tools for use by Intermapper probe definitions.
 #
+# [*nagios_plugins_package_name*]
+#   String or Array of nagios plugin packages to install, if any. Set
+#   to undef or empty array to avoid installing anything.
+#
+# [*font_package_name*]
+#   String or Array of font packages to install, if any. Set
+#   to undef or empty array to avoid installing anything.
+#
 # ===Usage
 #
 # The classes intermapper::service, intermapper::service_extra,
@@ -112,52 +120,66 @@
 # Class[intermapper::service] can be set to subscribe to the probe files.
 #
 class intermapper (
-  $basedir                = '/usr/local',
-  $vardir                 = '/var/local',
-  $owner                  = 'intermapper',
-  $group                  = 'intermapper',
-  $package_ensure         = 'present',
-  $package_manage         = true,
-  $package_name           = $intermapper::params::package_name,
-  $package_provider       = $intermapper::params::package_provider,
-  $package_source         = undef,
-  $service_manage         = true,
-  $service_imdc_manage    = true,
-  $service_imflows_manage = true,
-  $service_ensure         = 'running',
-  $service_imdc_ensure    = 'stopped',
-  $service_imflows_ensure = 'stopped',
-  $service_name           = $intermapper::params::service_name,
-  $service_imdc_name      = 'imdc',
-  $service_imflows_name   = 'imflows',
-  $service_provider       = $intermapper::params::service_provider,
-  $service_status_cmd     = $intermapper::params::service_status_cmd,
-  $service_has_restart    = $intermapper::params::service_has_restart,
-  $nagios_ensure          = 'present',
-  $nagios_manage          = false,
-  $nagios_plugins_dir     = undef,
-  $nagios_link_plugins    = $intermapper::params::nagios_link_plugins,
-) inherits intermapper::params {
-  validate_bool($nagios_manage)
-  validate_bool($package_manage)
-  validate_bool($service_manage)
-  validate_bool($service_has_restart)
-  validate_re($nagios_ensure, ['^present','^absent','^missing'])
+  Stdlib::Absolutepath $basedir,
+  Stdlib::Absolutepath $vardir,
+  Stdlib::Absolutepath $conf_file,
+  String $owner,
+  String $group,
+  String $conf_owner,
+  String $conf_group,
+  Enum[absent,latest,present] $package_ensure,
+  Boolean $package_manage,
+  Boolean $service_manage,
+  Boolean $service_imdc_manage,
+  Boolean $service_imflows_manage,
+  Enum[running,stopped] $service_ensure,
+  Enum[running,stopped] $service_imdc_ensure,
+  Enum[running,stopped] $service_imflows_ensure,
+  String $service_name,
+  String $service_imdc_name,
+  String $service_imflows_name,
+  Boolean $service_has_restart,
+  Enum[present,absent] $nagios_ensure,
+  Boolean $nagios_manage,
+  Array $nagios_link_plugins,
+  Hash $intermapper_icons,
+  Hash $intermapper_files,
+  Hash $intermapper_mibfiles,
+  Hash $intermapper_probes,
+  Hash $intermapper_tools,
+  Array $nagios_plugins_package_name,
+  Optional[String] $service_user,
+  Optional[String] $service_group,
+  Optional[Stdlib::Absolutepath] $service_pidfile,
+  Optional[Stdlib::Absolutepath] $service_settingsfolder,
+  Optional[String] $service_fontfolder,
+  Optional[String] $service_listen,
+  Optional[Variant[Array,String]] $package_name,
+  Optional[Variant[Array,String]] $font_package_name,
+  Optional[String] $package_provider,
+  Optional[String] $package_source,
+  Optional[String] $service_provider,
+  Optional[String] $service_status_cmd,
+  Optional[Stdlib::Absolutepath] $nagios_plugins_dir,
+) {
+  validate_re('^Linux$', $::kernel, "${::kernel} unsupported")
 
-  if $nagios_manage {
-    if $nagios_ensure == 'present' and $nagios_plugins_dir == undef {
-      fail(
-        'nagios_plugins_dir must be specified when nagios_ensure is "present"')
-    }
+  if $nagios_manage
+  and $nagios_ensure == 'present'
+  and $nagios_plugins_dir == undef {
+    fail('nagios_plugins_dir must be specified when nagios_ensure is "present"')
   }
 
-  $settingsdir="${vardir}/InterMapper_Settings"
-  $toolsdir="${settingsdir}/Tools"
+  $settingsdir = "${vardir}/InterMapper_Settings"
+  $toolsdir = "${settingsdir}/Tools"
 
-  anchor {'intermapper::begin': } ->
-  class {'::intermapper::install': } ->
-  class {'::intermapper::nagios': } ~>
-  class {'::intermapper::service': } ->
-  class {'::intermapper::service_extra': } ->
-  anchor {'intermapper::end': }
+  Class['intermapper::install']
+  -> Class['intermapper::config']
+  ~> Class['intermapper::service']
+  -> Class['intermapper::service_extra']
+
+  contain 'intermapper::install'
+  contain 'intermapper::config'
+  contain 'intermapper::service'
+  contain 'intermapper::service_extra'
 }

@@ -1,0 +1,66 @@
+# Managed by Puppet. DO NOT EDIT.
+#
+# intermapperd.conf
+# Configuration file for InterMapper Daemon (intermapperd)
+
+# The User directive sets the daemon's effective uid. Files created by the
+# daemon will be owned by this user. If this directive is omitted or its
+# value is empty, the daemon will continue run as root (assuming it was
+# started as root.) If the daemon is started with a different non-root uid,
+# it will continue running as that user, and this directive has no effect.
+
+<%- if $intermapper::service_user { -%>
+User "<%= $intermapper::service_user %>"
+<%- } else { -%>
+User "intermapper"
+<%- } -%>
+
+# The Group directive sets the group under which the daemon will answer requests.
+# The intermapperd program will have access to directories and files made
+# accessible to this group.
+
+<%- if $intermapper::service_group { -%>
+Group "<%= $intermapper::service_group %>"
+<%- } else { -%>
+# Group "staff"
+<%- } -%>
+
+# The PidFile directive sets the file into which the daemon stores its process ID.
+# The file name must begin with a /. If this directive is omitted, the daemon
+# does not store its PID anywhere.
+
+<%- if $intermapper::service_pidfile { -%>
+PidFile "<%= $intermapper::service_pidfile %>"
+<%- } else { -%>
+# PidFile "/var/run/intermapperd.pid"
+<%- } -%>
+
+# The SettingsFolder directive sets the directory where the daemon looks for its
+# preferences. If this directive is omitted, the daemon will look for and/or
+# create its own settings folder in the HOME directory of the current "User".
+
+<%- if $intermapper::settingsdir { -%>
+SettingsFolder "<%= $intermapper::settingsdir %>"
+<%- } else { -%>
+# SettingsFolder "/var/local/InterMapper_Settings"
+<%- } -%>
+
+# The FontFolder directive sets the directory where the daemon looks for TrueType
+# fonts. If this directive is omitted, the daemon will look for and/or
+# create its own font folder in its settings folder.
+
+<%- if $intermapper::service_fontfolder { -%>
+FontFolder "<%= $intermapper::service_fontfolder %>"
+<%- } else { -%>
+# FontFolder "$SettingsFolder/Fonts"
+<%- } -%>
+
+# The Listen directive instructs InterMapper to listen to only a specific
+# IP address. If this directive is omitted, the daemon will listen to all
+# IP addresses.
+
+<%- if $intermapper::service_listen { -%>
+Listen "<%= $intermapper::service_listen %>"
+<%- } else { -%>
+# Listen "127.0.0.1"
+<%- } -%>

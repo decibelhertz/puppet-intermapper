@@ -3,9 +3,9 @@ require 'spec_helper' # frozen_string_literal: true
 # rubocop:disable Metrics/BlockLength
 describe 'intermapper', type: :class do
   shared_context 'Supported Platform' do
+    it do should compile end
     it do should contain_class('intermapper::install') end
     it do should contain_class('intermapper::config') end
-    it do should contain_class('intermapper::nagios') end
     it do should contain_class('intermapper::service') end
     it do should contain_class('intermapper::service_extra') end
 
@@ -56,8 +56,61 @@ describe 'intermapper', type: :class do
           should contain_package('intermapper').with_provider('somethingcool')
         end
       end
+
+      describe 'nagios_plugins_package_name is an Array' do
+        npkgs = ['nagios-plugins', 'nagios-plugins-all']
+
+        describe 'nagios_manage is false' do
+          let :params do
+            { nagios_manage: false, nagios_plugins_package_name: npkgs }
+          end
+          it do should_not contain_package('nagios-plugins') end
+          it do should_not contain_package('nagios-plugins-all') end
+        end
+
+        describe 'nagios_manage is true' do
+          let :params do
+            { nagios_manage: true, nagios_plugins_package_name: npkgs }
+          end
+          it do should contain_package('nagios-plugins') end
+          it do should contain_package('nagios-plugins-all') end
+        end
+      end
     end
     # describe intermapper::install
+
+    describe 'intermapper::config' do
+      let :params do
+        {
+          package_ensure: 'present',
+          package_name: 'intermapper',
+          package_manage: true
+        }
+      end
+      it do should contain_class('intermapper::nagios') end
+      it do
+        should contain_file('intermapperd.conf').with(
+          ensure: 'file',
+          owner: 'root',
+          group: 'root',
+          mode: '0644'
+        )
+      end
+
+      describe 'should allow intermapper::icon types to be created' do
+        let :params do
+          {
+            intermapper_icons: { 'foo.png': { source: '/tmp/foo.png' } }
+          }
+        end
+        it do
+          should contain_intermapper__icon('foo.png').with_source(
+            '/tmp/foo.png'
+          )
+        end
+      end
+    end
+    # describe intermapper::config
 
     describe 'intermapper::service' do
       let :params do
@@ -185,7 +238,7 @@ describe 'intermapper', type: :class do
     describe 'intermapper::nagios' do
       describe 'with defaults' do
         it do
-          should_not contain_intermapper__nagios_plugin_link('check_nrpe')
+          should_not contain_intermapper__tool('check_nrpe')
         end
       end
 
@@ -199,7 +252,8 @@ describe 'intermapper', type: :class do
                 nagios_plugins_dir: 'UNSET'
               }
             end
-            it do should raise_error(Puppet::Error, /must be specified/) end
+            it do should_not compile end
+            it do should raise_error(Puppet::Error, /Absolute/) end
           end
 
           describe 'with nagios_ensure == present and plugins dir set' do
@@ -210,12 +264,12 @@ describe 'intermapper', type: :class do
                 nagios_plugins_dir: '/usr/lib64/nagios-plugins'
               }
             end
-            # This is a subset of the defaults in intermapper::params
+            # This is a subset of the defaults in data/common.yaml
             %w[check_nrpe check_disk check_file_age].each do |nplugin|
               it do
-                should contain_intermapper__nagios_plugin_link(nplugin).with(
+                should contain_intermapper__tool(nplugin).with(
                   ensure: 'link',
-                  nagios_plugins_dir: '/usr/lib64/nagios-plugins'
+                  target: "/usr/lib64/nagios-plugins/#{nplugin}"
                 )
               end
             end
@@ -227,9 +281,7 @@ describe 'intermapper', type: :class do
             end
             %w[check_nrpe check_disk check_file_age].each do |nplugin|
               it do
-                should contain_intermapper__nagios_plugin_link(
-                  nplugin
-                ).with_ensure('absent')
+                should contain_intermapper__tool(nplugin).with_ensure('absent')
               end
             end
           end
@@ -249,16 +301,14 @@ describe 'intermapper', type: :class do
             }
           end
           pnames.each do |p|
-            it do should contain_intermapper__nagios_plugin_link(p) end
+            it do should contain_intermapper__tool(p) end
           end
         end
       end
       # describe nagios_link_plugins
     end
     # describe intermapper::nagios
-  end
 
-  shared_context 'RedHat' do
     describe 'intermapper::service' do
       it do
         should contain_service('intermapperd').with(
@@ -269,16 +319,25 @@ describe 'intermapper', type: :class do
     end
   end
 
+  shared_context 'Debian' do
+    it do should contain_package('fonts-hack-ttf') end
+  end
+
+  shared_context 'RedHat' do
+    it do should contain_package('dejavu-sans-fonts') end
+  end
+
   # See metadata.json
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let :facts do
         facts
       end
+      include_context 'Supported Platform'
+
       case facts[:os]['family']
-      when 'RedHat' then
-        include_context 'Supported Platform'
-        it_behaves_like 'RedHat'
+      when 'Debian' then it_behaves_like 'Debian'
+      when 'RedHat' then it_behaves_like 'RedHat'
       end
     end
   end

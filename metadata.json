@@ -10,20 +10,10 @@
   "license": "BSD",
   "name": "UCSDANF-intermapper",
   "operatingsystem_support": [
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [
-        "6",
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "CentOS",
-      "operatingsystemrelease": [
-        "6",
-        "7"
-      ]
-    }
+    { "operatingsystem": "Debian", "operatingsystemrelease": ["8","9"] },
+    { "operatingsystem": "CentOS", "operatingsystemrelease": ["6","7"] },
+    { "operatingsystem": "RedHat", "operatingsystemrelease": ["6","7"] },
+    { "operatingsystem": "Ubuntu", "operatingsystemrelease": ["16.04","18.04"] }
   ],
   "project_page": "https://github.com/UCSD-ANF/puppet-intermapper",
   "source": "https://github.com/UCSD-ANF/puppet-intermapper",

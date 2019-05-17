@@ -1,74 +1,86 @@
 #
 # == define: intermapper::file
 #
-# Install a new Intermapper file into Intermapper.
+# Install a file into Intermapper, generically.
 #
-# InterMapper has several directories that we want to pouplate with data.
-# This type serves as a macro so that we are ensuring proper ownership,
-# notifications, etc.
+# InterMapper has several subdirectories that we want to populate with
+# data.
 #
 # ===Parameters
 #
-# [*filetype*]
-#   File type, which controls what settings subdirectory our file ends
-#   up in.
+# [*subdir*]
+#   Subdirectory, which controls what settings subdirectory our file
+#   ends up in. This is based on the default directories we could want
+#   to affect in InterMapper.
 #
-# [*ensure*]
-#   works just like a file resource
-#
-# [*target*]
-#   If ensure is set to link, then link_target is used as the target parameter
-#   for the underlying file resource. This attribute is mutually exclusive with
-#   source and content.
-#
-# [*source*]
-#   The source for the file, as a Puppet resource path. This attribute is
-#   mutally exclusive with soruce and target.
-#
-# [*content*]
-#   The desired contents of a file, as a string. This attribute is mutually
-#   exclusive with source and target.
-#
-# [*mode*]
-#   File mode, same format as a file resource.
+# [*all other parameters*]
+#   Same as file resource per https://puppet.com/docs/puppet/5.5/types/file.html
 #
 define intermapper::file(
-  Enum[icon,certificate,extension,mibfile,probe,sound,tool,webpage,translation]
-  $filetype,
-  Enum[file,link,absent] $ensure = 'file',
-  Optional[String] $target = undef,
-  Optional[String] $source = undef,
+  Enum['AutoMate', 'Certificates', 'Custom Icons', 'Extensions',
+    'MIB Files',  'Probes', 'Sounds', 'Tools', 'Translations',
+    'Web Pages'] $subdir,
+  Enum['file', 'directory', 'link', 'absent'] $ensure = 'file',
+  Optional $backup = undef,
+  Optional $checksum = undef,
+  Optional $checksum_value = undef,
   Optional[String] $content = undef,
-  Optional[Boolean] $force = undef,
-  Optional[String] $mode = undef,
-  Optional[Boolean] $recurse = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $force = undef,
+  Optional $ignore = undef,
+  Optional[Enum['follow','manage']] $links = undef,
+  Optional[String] $mode = '0644',
+  Optional[Stdlib::Absolutepath] $path = undef,
+  Optional $provider = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $purge = undef,
+  Optional[Variant[Boolean,Enum['remote']]] $recurse = undef,
+  Optional $recurselimit = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $replace = undef,
+  Optional[Boolean] $selinux_ignore_defaults = undef,
+  Optional $selrange = undef,
+  Optional $selrole = undef,
+  Optional $seltype = undef,
+  Optional $seluser = undef,
+  Optional[Variant[Boolean,Enum['yes','no']]] $show_diff = undef,
+  Optional[String] $source = undef,
+  Optional[Enum['use','use_when_creating','ignore']] $source_permissions = undef,
+  Optional[Enum['first','all']] $sourceselect = undef,
+  Optional[String] $target = undef,
+  Optional $validate_cmd = undef,
+  Optional $validate_replacement = undef,
 ) {
   include 'intermapper'
 
-  $subdir = $filetype ? {
-    'automate'    => 'AutoMate',
-    'certificate' => 'Certificates',
-    'extension'   => 'Extension',
-    'icon'        => 'Custom Icons',
-    'mibfile'     => 'MIB Files',
-    'probe'       => 'Probes',
-    'sound'       => 'Sounds',
-    'tool'        => 'Tools',
-    'translation' => 'Translations',
-    'webpage'     => 'Web Pages',
-  }
-
   file { "${intermapper::settingsdir}/${subdir}/${title}":
-    ensure  => $ensure,
-    target  => $target,
-    source  => $source,
-    content => $content,
-    force   => $force,
-    mode    => $mode,
-    recurse => $recurse,
-    owner   => $intermapper::owner,
-    group   => $intermapper::group,
-    require => Class['intermapper::install'],
-    notify  => Class['intermapper::service'],
+    ensure                  => $ensure,
+    backup                  => $backup,
+    checksum                => $checksum,
+    checksum_value          => $checksum_value,
+    content                 => $content,
+    force                   => $force,
+    group                   => $intermapper::group,
+    ignore                  => $ignore,
+    links                   => $links,
+    mode                    => $mode,
+    owner                   => $intermapper::owner,
+    path                    => $path,
+    provider                => $provider,
+    purge                   => $purge,
+    recurse                 => $recurse,
+    recurselimit            => $recurselimit,
+    replace                 => $replace,
+    selinux_ignore_defaults => $selinux_ignore_defaults,
+    selrange                => $selrange,
+    selrole                 => $selrole,
+    seltype                 => $seltype,
+    seluser                 => $seluser,
+    show_diff               => $show_diff,
+    source                  => $source,
+    source_permissions      => $source_permissions,
+    sourceselect            => $sourceselect,
+    target                  => $target,
+    validate_cmd            => $validate_cmd,
+    validate_replacement    => $validate_replacement,
+    require                 => Class['intermapper::install'],
+    notify                  => Class['intermapper::service'],
   }
 }

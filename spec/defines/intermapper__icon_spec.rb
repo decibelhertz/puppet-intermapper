@@ -1,96 +1,155 @@
-require 'spec_helper'
+require 'spec_helper' # frozen_string_literal: true
 
-describe 'intermapper::icon', :type => :define do
-  t='edu.ucsd.testicon'
-  td='/var/local/InterMapper_Settings/Custom Icons' # assume it hasn't been overriden
-  fname="#{td}/#{t}"
-  let(:title) { t }
+# rubocop:disable Metrics/BlockLength
+describe 'intermapper::icon', type: :define do
+  let :title do
+    'edu.ucsd.testicon'
+  end
 
-  ['CentOS', 'RedHat', 'Solaris'].each do |system|
-    context "when on system #{system}" do
-      if system == 'CentOS'
-        let(:facts) {{
-          :osfamily        => 'RedHat',
-          :operatingsystem => system,
-        }}
-      else
-        let(:facts) {{
-          :osfamily        => system,
-          :operatingsystem => system,
-        }}
-      end
+  shared_context 'Supported Platform' do
+    it do should compile end
+    it do should contain_class('intermapper') end
+    it do
+      should contain_file(
+        '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+      ).with(
+        ensure: 'file',
+        backup: nil,
+        checksum: nil,
+        checksum_value: nil,
+        content: nil,
+        force: nil,
+        group: 'intermapper',
+        ignore: nil,
+        links: nil,
+        mode: '0644',
+        owner: 'intermapper',
+        path: '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon',
+        provider: nil,
+        purge: nil,
+        recurse: nil,
+        recurselimit: nil,
+        replace: nil,
+        selinux_ignore_defaults: nil,
+        selrange: nil,
+        selrole: nil,
+        seltype: nil,
+        seluser: nil,
+        show_diff: nil,
+        source: nil,
+        source_permissions: nil,
+        sourceselect: nil,
+        target: nil,
+        validate_cmd: nil,
+        validate_replacement: nil
+      ).that_requires(
+        'Class[intermapper::install]'
+      ).that_notifies(
+        'Class[intermapper::service]'
+      )
+    end
 
-      describe 'with defaults' do
-        it { should contain_file(fname)\
-             .that_notifies('Class[intermapper::service]')\
-             .that_requires('Class[intermapper::install]')\
-             .with_force(nil)\
-             .with_content(nil)\
-             .with_source(nil)\
-             .with_target(nil)\
-             .with_owner('intermapper')\
-             .with_group('intermapper')
-        }
-      end
-
-      describe 'force' do
-        [true, false].each do |tf|
-          describe "is #{tf}" do
-            let(:params) {{
-              :force => tf,
-            }}
-            it { should contain_file(fname).with_force(tf) }
+    # Turn on/off a bunch of boolean params
+    %w[
+      force purge recurse replace selinux_ignore_defaults show_diff
+    ].each do |p|
+      [true, false].each do |b|
+        describe "file param '#{p}' is set to '#{b}'" do
+          let :params do
+            { "#{p}": b }
+          end
+          it do
+            should contain_file(
+              '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+            ).with("#{p}": b)
           end
         end
       end
+    end
 
-      describe 'content is set' do
-        c = 'This is probe content'
-        let(:params) {{
-          :content => c,
-        }}
-        it { should contain_file(fname).with_content(c) }
+    describe 'ensure is set to directory' do
+      let :params do
+        { ensure: 'directory' }
       end
-
-      describe 'source is set' do
-        s = '/tmp/testfile'
-        let(:params) {{
-          :source => s,
-        }}
-        it { should contain_file(fname).with_source(s) }
+      it do
+        should contain_file(
+          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+        ).with_ensure('directory')
       end
+    end
 
-      describe 'mode is set' do
-        m = '0755'
-        let(:params) {{
-          :mode => m,
-        }}
-        it { should contain_file(fname).with_mode(m) }
+    describe 'content is set' do
+      c = 'This is probe content'
+      let :params do
+        { content: c }
       end
+      it do
+        should contain_file(
+          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+        ).with_content(c)
+      end
+    end
 
-      describe 'linking' do
-        tgt = '/tmp/sourcefile'
+    describe 'source is set' do
+      s = '/tmp/testfile'
+      let :params do
+        { source: s }
+      end
+      it do
+        should contain_file(
+          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+        ).with_source(s)
+      end
+    end
 
-        describe 'with ensure == link and target set' do
-          let(:params) {{
-            :ensure => 'link',
-            :target => tgt,
-          }}
-          it { should contain_file(fname).with({
-            :ensure => 'link',
-            :target => tgt,
-          }) }
+    describe 'mode is set' do
+      m = '0755'
+      let :params do
+        { mode: m }
+      end
+      it do
+        should contain_file(
+          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+        ).with_mode(m)
+      end
+    end
+
+    describe 'linking' do
+      tgt = '/tmp/sourcefile'
+
+      describe 'with ensure == link and target set' do
+        let :params do
+          { ensure: 'link', target: tgt }
         end
-
-        describe 'with ensure set to link target' do
-          let(:params) {{
-            :ensure => tgt,
-          }}
-          it { should contain_file(fname).with_ensure(tgt) }
+        it do
+          should contain_file(
+            '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
+          ).with(ensure: 'link', target: tgt)
         end
-
       end
 
-    end # on system
-  end # each system
+      # This type of shortcut is deprecated as of 4.3.0, so we make it fail
+      describe 'with ensure set to link target' do
+        let :params do
+          { ensure: tgt }
+        end
+        it do should_not compile end
+      end
+    end
+  end
+  # Supported Platform
+
+  # See metadata.json
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let :facts do
+        facts
+      end
+      case facts[:os]['family']
+      when 'Debian', 'RedHat' then
+        include_context 'Supported Platform'
+      end
+    end
+  end
 end
+# rubocop:enable Metrics/BlockLength

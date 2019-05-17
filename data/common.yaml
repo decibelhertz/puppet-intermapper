@@ -1,12 +1,8 @@
 ---
 intermapper::basedir: '/usr/local'
-intermapper::conffile: '/usr/local/etc/intermapperd.conf'
-intermapper::conf_user: 'intermapper'
-intermapper::conf_group: 'intermapper'
-intermapper::conf_pidfile:
-intermapper::conf_settingsfolder:
-intermapper::conf_fontfolder:
-intermapper::conf_listen:
+intermapper::conf_file: '/usr/local/etc/intermapperd.conf'
+intermapper::conf_owner: 'root'
+intermapper::conf_group: 'root'
 intermapper::group: 'intermapper'
 intermapper::intermapper_icons: {}
 intermapper::intermapper_files: {}
@@ -18,6 +14,7 @@ intermapper::nagios_link_plugins:
   - 'check_disk'
   - 'check_file_age'
   - 'check_ftp'
+  - 'check_http'
   - 'check_icmp'
   - 'check_mailq'
   - 'check_nrpe'
@@ -26,7 +23,8 @@ intermapper::nagios_link_plugins:
   - 'check_tcp'
   - 'check_udp'
 intermapper::nagios_manage: false
-intermapper::nagios_plugins_dir:
+intermapper::nagios_plugins_dir: '/usr/lib/nagios/plugins'
+intermapper::nagios_plugins_package_name: []
 intermapper::owner: 'intermapper'
 intermapper::package_ensure: 'present'
 intermapper::package_manage: true
@@ -45,5 +43,11 @@ intermapper::service_manage: true
 intermapper::service_name: 'intermapperd'
 intermapper::service_provider:
 intermapper::service_status_cmd:
+intermapper::service_user: 'intermapper'
+intermapper::service_group:
+intermapper::service_pidfile:
+intermapper::service_settingsfolder:
+intermapper::service_fontfolder:
+intermapper::service_listen:
 intermapper::vardir: '/var/local'
 ...

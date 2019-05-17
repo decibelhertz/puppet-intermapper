@@ -17,7 +17,7 @@ describe 'intermapper::service_extra', type: :class do
         facts
       end
       case facts[:os]['family']
-      when 'RedHat' then
+      when 'Debian', 'RedHat' then
         include_context 'Supported Platform'
       end
     end
