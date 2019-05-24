@@ -21,4 +21,6 @@ class intermapper::config {
   create_resources('intermapper::mibfile', $intermapper::intermapper_mibfiles)
   create_resources('intermapper::probe', $intermapper::intermapper_probes)
   create_resources('intermapper::tool', $intermapper::intermapper_tools)
+  create_resources('intermapper::service_limits',
+  $intermapper::intermapper_service_limits)
 }

@@ -110,6 +110,16 @@
 # [*font_package_name*]
 #   String or Array of font packages to install, if any. Set
 #   to undef or empty array to avoid installing anything.
+# [*intermapper_icons*]
+#   A Hash that creates intermapper::icon resources.
+# [*intermapper_mibfiles*]
+#   A Hash that creates intermapper::mibfile resources.
+# [*intermapper_probes*]
+#   A Hash that creates intermapper::probes resources.
+# [*intermapper_tools*]
+#   A Hash that creates intermapper::tools resources.
+# [*intermapper_service_limits*]
+#   A Hash that creates intermapper::service_limits resources.
 #
 # ===Usage
 #
@@ -143,10 +153,10 @@ class intermapper (
   Boolean $nagios_manage,
   Array $nagios_link_plugins,
   Hash $intermapper_icons,
-  Hash $intermapper_files,
   Hash $intermapper_mibfiles,
   Hash $intermapper_probes,
   Hash $intermapper_tools,
+  Hash $intermapper_service_limits,
   Array $nagios_plugins_package_name,
   Optional[String] $service_user,
   Optional[String] $service_group,

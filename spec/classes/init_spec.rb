@@ -124,6 +124,27 @@ describe 'intermapper', type: :class do
             hasstatus: true
           )
         end
+        it do
+          should contain_intermapper__service_limits('intermapperd').with(
+            ensure: 'present',
+            limitnproc: '327680:655360',
+            limitnofile: '32768:65536',
+          )
+        end
+        it do
+          should contain_intermapper__service_limits('imdc').with(
+            ensure: 'present',
+            limitnproc: '327680:655360',
+            limitnofile: '32768:65536',
+          )
+        end
+        it do
+          should contain_intermapper__service_limits('imflows').with(
+            ensure: 'present',
+            limitnproc: '327680:655360',
+            limitnofile: '32768:65536',
+          )
+        end
       end
 
       describe 'service_manage when false' do

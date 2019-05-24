@@ -9,6 +9,16 @@ intermapper::intermapper_files: {}
 intermapper::intermapper_mibfiles: {}
 intermapper::intermapper_probes: {}
 intermapper::intermapper_tools: {}
+intermapper::intermapper_service_limits:
+  'intermapperd':
+    limitnproc: '327680:655360'
+    limitnofile: '32768:65536'
+  'imdc':
+    limitnproc: '327680:655360'
+    limitnofile: '32768:65536'
+  'imflows':
+    limitnproc: '327680:655360'
+    limitnofile: '32768:65536'
 intermapper::nagios_ensure: 'present'
 intermapper::nagios_link_plugins:
   - 'check_disk'
