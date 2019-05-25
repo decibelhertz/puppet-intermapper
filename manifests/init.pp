@@ -84,6 +84,27 @@
 #   Normally false except on Solaris. Controls the behavior of the service
 #   restart logic in Puppet.
 #
+# [*firewall_defaults*]
+#   A Hash that allows you to tune the default parameters handed off to
+#   managed firewall resources. Default sets ctstate to NEW and action to
+#   accept.
+#
+# [*firewall_ipv4_manage*]
+#   A Boolean that chooses whether or not to manage IPv4 firewall resources.
+#   Default is false.
+#
+# [*firewall_ipv6_manage*]
+#   A Boolean that chooses whether or not to manage IPv6 firewall resources.
+#   Default is false.
+#
+# [*firewall_ports_tcp*]
+#   An Array/String/Integer that chooses the TCP ports to open in the firewall.
+#   Default is 80 (HTTP), 443 (HTTPS) and 8181 (IM RemoteAccess).
+#
+# [*firewall_ports_udp*]
+#   An Array/String/Integer that chooses the UDP ports to open in the firewall.
+#   Default is 162 (SNMPTRAP) and 8181 (IM RemoteAccess).
+#
 # [*nagios_ensure*]
 #   If nagios_manage is true, this controls whether Nagios resources are added
 #   or removed. Defaults to 'present'. Requires nagios_plugins_dir to be set
@@ -162,6 +183,11 @@ class intermapper (
   Hash $intermapper_probes,
   Hash $intermapper_tools,
   Hash $intermapper_service_limits,
+  Hash $firewall_defaults,
+  Boolean $firewall_ipv4_manage,
+  Boolean $firewall_ipv6_manage,
+  Variant[Integer,String,Array] $firewall_ports_tcp,
+  Variant[Integer,String,Array] $firewall_ports_udp,
   Array $nagios_plugins_package_name,
   Optional[String] $service_user,
   Optional[String] $service_group,
@@ -191,9 +217,11 @@ class intermapper (
   -> Class['intermapper::config']
   ~> Class['intermapper::service']
   -> Class['intermapper::service_extra']
+  -> Class['intermapper::firewall']
 
   contain 'intermapper::install'
   contain 'intermapper::config'
   contain 'intermapper::service'
   contain 'intermapper::service_extra'
+  contain 'intermapper::firewall'
 }

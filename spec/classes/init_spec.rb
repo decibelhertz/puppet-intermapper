@@ -256,6 +256,51 @@ describe 'intermapper', type: :class do
     end
     # describe intermapper::service_extra
 
+    describe 'intermapper::firewall' do
+      let :params do
+        {
+          firewall_ipv4_manage: true,
+          firewall_ipv6_manage: true,
+        }
+      end
+      it do should contain_class('intermapper::firewall') end
+      it do
+        should contain_firewall('098 IPv4 InterMapper TCP ports').with(
+          ctstate: 'NEW',
+          action: 'accept',
+          dport: [80, 443, 8181],
+          proto: 'tcp'
+        )
+      end
+      it do
+        should contain_firewall('099 IPv4 InterMapper UDP ports').with(
+          ctstate: 'NEW',
+          action: 'accept',
+          dport: [162, 8181],
+          proto: 'udp'
+        )
+      end
+      it do
+        should contain_firewall('098 IPv6 InterMapper TCP ports').with(
+          ctstate: 'NEW',
+          action: 'accept',
+          dport: [80, 443, 8181],
+          proto: 'tcp',
+          provider: 'ip6tables'
+        )
+      end
+      it do
+        should contain_firewall('099 IPv6 InterMapper UDP ports').with(
+          ctstate: 'NEW',
+          action: 'accept',
+          dport: [162, 8181],
+          proto: 'udp',
+          provider: 'ip6tables'
+        )
+      end
+    end
+    # describe intermapper::config
+
     describe 'intermapper::nagios' do
       describe 'with defaults' do
         it do

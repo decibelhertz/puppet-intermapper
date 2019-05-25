@@ -3,6 +3,22 @@ intermapper::basedir: '/usr/local'
 intermapper::conf_file: '/usr/local/etc/intermapperd.conf'
 intermapper::conf_owner: 'root'
 intermapper::conf_group: 'root'
+intermapper::firewall_defaults:
+  ctstate: 'NEW'
+  action: 'accept'
+intermapper::firewall_ipv4_manage: false
+intermapper::firewall_ipv6_manage: false
+intermapper::firewall_ports_tcp:
+  - 80    # HTTP
+  - 443   # HTTPS
+  - 8181  # RemoteAccess
+  # Other ports that InterMapper uses; probably not secure in the public
+  # - 8182  # InterMapper DataCenter (imdc)
+  # - 8183  # built-in PostGRESQL
+  # - 8184  # InterMapper Flows (imflows)
+intermapper::firewall_ports_udp:
+  - 162   # SNMPTRAP
+  - 8181  # RemoteAccess
 intermapper::group: 'intermapper'
 intermapper::intermapper_icons: {}
 intermapper::intermapper_files: {}
