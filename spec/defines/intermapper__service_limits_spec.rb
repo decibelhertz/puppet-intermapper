@@ -87,15 +87,15 @@ describe 'intermapper::service_limits', type: :define do
               limitcpu: 'infinity',
               limitfsize: 'infinity',
               limitdata: 'infinity',
-              limitstack: 8192,
-              limitcore: 0,
+              limitstack: '8388608:infinity',
+              limitcore: '0:infinity',
               limitrss: 'infinity',
               limitnofile: 65_536,
               limitas: 'infinity',
               limitnproc: 655_360,
-              limitmemlock: 64,
+              limitmemlock: 65_536,
               limitlocks: 'infinity',
-              limitsigpending: 7_260,
+              limitsigpending: 31_192,
               limitmsgqueue: 819_200,
               limitnice: 0,
               limitrtprio: 0,
@@ -112,9 +112,9 @@ describe 'intermapper::service_limits', type: :define do
             ).with_content(
               /\n LimitDATA=infinity$/
             ).with_content(
-              /\n LimitSTACK=8192$/
+              /\n LimitSTACK=8388608:infinity$/
             ).with_content(
-              /\n LimitCORE=0$/
+              /\n LimitCORE=0:infinity$/
             ).with_content(
               /\n LimitRSS=infinity$/
             ).with_content(
@@ -124,11 +124,11 @@ describe 'intermapper::service_limits', type: :define do
             ).with_content(
               /\n LimitNPROC=655360$/
             ).with_content(
-              /\n LimitMEMLOCK=64$/
+              /\n LimitMEMLOCK=65536$/
             ).with_content(
               /\n LimitLOCKS=infinity$/
             ).with_content(
-              /\n LimitSIGPENDING=7260$/
+              /\n LimitSIGPENDING=31192$/
             ).with_content(
               /\n LimitMSGQUEUE=819200$/
             ).with_content(

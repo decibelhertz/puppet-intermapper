@@ -6,51 +6,6 @@
 # Run (EG) `ls -l /proc/$(pgrep intermapperd)/fd/ | wc -l` to see how
 # many files are open.
 [Service]
-<%- if $limitcpu { -%>
- LimitCPU=<%= $limitcpu %>
-<%- } -%>
-<%- if $limitfsize { -%>
- LimitFSIZE=<%= $limitfsize %>
-<%- } -%>
-<%- if $limitdata { -%>
- LimitDATA=<%= $limitdata %>
-<%- } -%>
-<%- if $limitstack { -%>
- LimitSTACK=<%= $limitstack %>
-<%- } -%>
-<%- if $limitcore { -%>
- LimitCORE=<%= $limitcore %>
-<%- } -%>
-<%- if $limitrss { -%>
- LimitRSS=<%= $limitrss %>
-<%- } -%>
-<%- if $limitnofile { -%>
- LimitNOFILE=<%= $limitnofile %>
-<%- } -%>
-<%- if $limitas { -%>
- LimitAS=<%= $limitas %>
-<%- } -%>
-<%- if $limitnproc { -%>
- LimitNPROC=<%= $limitnproc %>
-<%- } -%>
-<%- if $limitmemlock { -%>
- LimitMEMLOCK=<%= $limitmemlock %>
-<%- } -%>
-<%- if $limitlocks { -%>
- LimitLOCKS=<%= $limitlocks %>
-<%- } -%>
-<%- if $limitsigpending { -%>
- LimitSIGPENDING=<%= $limitsigpending %>
-<%- } -%>
-<%- if $limitmsgqueue { -%>
- LimitMSGQUEUE=<%= $limitmsgqueue %>
-<%- } -%>
-<%- if $limitnice { -%>
- LimitNICE=<%= $limitnice %>
-<%- } -%>
-<%- if $limitrtprio { -%>
- LimitRTPRIO=<%= $limitrtprio %>
-<%- } -%>
-<%- if $limitrttime { -%>
- LimitRTTIME=<%= $limitrttime %>
+<%- $limits.each |$key, $value| { -%>
+ <%= $key %>=<%= $value %>
 <%- } -%>
