@@ -110,23 +110,28 @@
 # [*font_package_name*]
 #   String or Array of font packages to install, if any. Set
 #   to undef or empty array to avoid installing anything.
+#
 # [*intermapper_icons*]
 #   A Hash that creates intermapper::icon resources.
+#
 # [*intermapper_mibfiles*]
 #   A Hash that creates intermapper::mibfile resources.
+#
 # [*intermapper_probes*]
 #   A Hash that creates intermapper::probes resources.
+#
 # [*intermapper_tools*]
 #   A Hash that creates intermapper::tools resources.
+#
 # [*intermapper_service_limits*]
 #   A Hash that creates intermapper::service_limits resources.
 #
 # ===Usage
 #
 # The classes intermapper::service, intermapper::service_extra,
-# intermapper::install, and intermapper::nagios are not intended to be called
-# directly outside of this module. They can be used as notifiers and
-# subscription points however, so probes can be installed and the
+# intermapper::install, intermapper::config and intermapper::nagios are not
+# intended to be called directly outside of this module. They can be used as
+# notifiers and subscription points however, so probes can be installed and the
 # Class[intermapper::service] can be set to subscribe to the probe files.
 #
 class intermapper (
@@ -181,7 +186,6 @@ class intermapper (
   }
 
   $settingsdir = "${vardir}/InterMapper_Settings"
-  $toolsdir = "${settingsdir}/Tools"
 
   Class['intermapper::install']
   -> Class['intermapper::config']
