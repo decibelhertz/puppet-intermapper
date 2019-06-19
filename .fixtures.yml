@@ -1,5 +1,6 @@
 fixtures:
-    forge_modules:
-        stdlib: "puppetlabs/stdlib"
-    symlinks:
-        intermapper: "#{source_dir}"
+  forge_modules:
+    firewall: "puppetlabs/firewall"
+    stdlib: "puppetlabs/stdlib"
+  symlinks:
+    intermapper: "#{File.dirname(source_dir)}/puppet-intermapper"

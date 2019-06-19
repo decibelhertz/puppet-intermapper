@@ -1,0 +1,3 @@
+---
+intermapper::nagios_plugins_dir: '/usr/lib64/nagios/plugins'
+...

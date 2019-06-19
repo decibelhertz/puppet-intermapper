@@ -1,0 +1,11 @@
+---
+intermapper::font_package_name:  # several TrueType fonts for Debian
+  - 'fonts-fantasque-sans'
+  - 'fonts-freefont-ttf'
+  - 'fonts-hack-ttf'
+  - 'fonts-isabella'
+  - 'ttf-bitstream-vera'
+  - 'ttf-summersby'
+
+intermapper::service_fontfolder: '/usr/share/fonts/truetype'
+...

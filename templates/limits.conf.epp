@@ -1,0 +1,11 @@
+# Managed by Puppet. DO NOT EDIT.
+
+# <%= $filename %>
+# ulimit-style settings for the SysV service <%= $service_name %>.
+# See `man 5 systemd.exec` for details on configuring.
+# Run (EG) `ls -l /proc/$(pgrep intermapperd)/fd/ | wc -l` to see how
+# many files are open.
+[Service]
+<%- $limits.each |$key, $value| { -%>
+ <%= $key %>=<%= $value %>
+<%- } -%>

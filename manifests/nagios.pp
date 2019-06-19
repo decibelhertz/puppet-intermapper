@@ -1,19 +1,30 @@
-# Plugins that should be linked from the main Nagios plugin directory to
-# Intermapper's Tools directory
-# Requires intermapper::nagios_link_plugins and intermapper::nagios_pluginsdir
-# to be set
+# Plugins that should be linked from the main Nagios plugin directory
+# to InterMapper's Tools directory.
+# Requires intermapper::nagios_link_plugins and
+# intermapper::nagios_pluginsdir to be set
 class intermapper::nagios {
-  # TODO: Consider making this class private?
-  #private("Only should be called from the ${module_name} module")
+
+  if $caller_module_name != $module_name {
+    fail("Use of private class ${name} by ${caller_module_name}")
+  }
+
+  if $intermapper::nagios_manage
+  and $intermapper::nagios_ensure == 'present'
+  and $intermapper::nagios_plugins_dir == undef {
+    fail('nagios_plugins_dir must be specified when nagios_ensure is "present"')
+  }
+
+  $_ensure = $intermapper::nagios_ensure ? {
+    'present' => 'link',
+    default   => $intermapper::nagios_ensure,
+  }
 
   if $intermapper::nagios_manage {
-    $manage_npdir = $intermapper::nagios_plugins_dir ? {
-      'UNSET'     => undef,
-      default     => $intermapper::nagios_plugins_dir,
-    }
-    intermapper::nagios_plugin_link{ $intermapper::nagios_link_plugins :
-      ensure             => $intermapper::nagios_ensure,
-      nagios_plugins_dir => $manage_npdir,
+    $intermapper::nagios_link_plugins.each |String $plugin| {
+      intermapper::tool { $plugin :
+        ensure => $_ensure,
+        target => "${intermapper::nagios_plugins_dir}/${plugin}",
+      }
     }
   }
 }

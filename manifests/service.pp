@@ -1,15 +1,16 @@
+# Manage InterMapper service
 class intermapper::service {
-  # TODO: Consider making this class private?
-  #private("Only should be called from the ${module_name} module")
+
+  if $caller_module_name != $module_name {
+    fail("Use of private class ${name} by ${caller_module_name}")
+  }
 
   $manage_service_enable = $intermapper::service_ensure ? {
-    true      => true,
     'running' => true,
-    false     => false,
     'stopped' => false,
   }
 
-  if $::intermapper::service_manage {
+  if $intermapper::service_manage {
     service { $intermapper::service_name :
       ensure     => $intermapper::service_ensure,
       enable     => $manage_service_enable,

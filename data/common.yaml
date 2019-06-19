@@ -1,0 +1,79 @@
+---
+intermapper::basedir: '/usr/local'
+intermapper::conf_file: '/usr/local/etc/intermapperd.conf'
+intermapper::conf_owner: 'root'
+intermapper::conf_group: 'root'
+intermapper::firewall_defaults:
+  ctstate: 'NEW'
+  action: 'accept'
+intermapper::firewall_ipv4_manage: false
+intermapper::firewall_ipv6_manage: false
+intermapper::firewall_ports_tcp:
+  - 80    # HTTP
+  - 443   # HTTPS
+  - 8181  # RemoteAccess
+  # Other ports that InterMapper uses; probably not secure in the public
+  # - 8182  # InterMapper DataCenter (imdc)
+  # - 8183  # built-in PostGRESQL
+  # - 8184  # InterMapper Flows (imflows)
+intermapper::firewall_ports_udp:
+  - 162   # SNMPTRAP
+  - 8181  # RemoteAccess
+intermapper::group: 'intermapper'
+intermapper::intermapper_icons: {}
+intermapper::intermapper_files: {}
+intermapper::intermapper_mibfiles: {}
+intermapper::intermapper_probes: {}
+intermapper::intermapper_tools: {}
+intermapper::intermapper_service_limits:
+  'intermapperd':
+    limitnproc: '327680:655360'
+    limitnofile: '32768:65536'
+  'imdc':
+    limitnproc: '327680:655360'
+    limitnofile: '32768:65536'
+  'imflows':
+    limitnproc: '327680:655360'
+    limitnofile: '32768:65536'
+intermapper::nagios_ensure: 'present'
+intermapper::nagios_link_plugins:
+  - 'check_disk'
+  - 'check_file_age'
+  - 'check_ftp'
+  - 'check_http'
+  - 'check_icmp'
+  - 'check_mailq'
+  - 'check_nrpe'
+  - 'check_procs'
+  - 'check_snmp'
+  - 'check_tcp'
+  - 'check_udp'
+intermapper::nagios_manage: false
+intermapper::nagios_plugins_dir: '/usr/lib/nagios/plugins'
+intermapper::nagios_plugins_package_name: []
+intermapper::owner: 'intermapper'
+intermapper::package_ensure: 'present'
+intermapper::package_manage: true
+intermapper::package_name: 'InterMapper'
+intermapper::package_provider:
+intermapper::package_source:
+intermapper::service_ensure: 'running'
+intermapper::service_has_restart: true
+intermapper::service_imdc_ensure: 'stopped'
+intermapper::service_imdc_manage: true
+intermapper::service_imdc_name: 'imdc'
+intermapper::service_imflows_ensure: 'stopped'
+intermapper::service_imflows_manage: true
+intermapper::service_imflows_name: 'imflows'
+intermapper::service_manage: true
+intermapper::service_name: 'intermapperd'
+intermapper::service_provider:
+intermapper::service_status_cmd:
+intermapper::service_user: 'intermapper'
+intermapper::service_group:
+intermapper::service_pidfile:
+intermapper::service_settingsfolder:
+intermapper::service_fontfolder:
+intermapper::service_listen:
+intermapper::vardir: '/var/local'
+...

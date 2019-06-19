@@ -1,7 +1,7 @@
 #
 # == define: intermapper::tool
 #
-# Install a new Intermapper tool into Intermapper's Tools directory.
+# Install a new InterMapper tool into InterMapper's Tools directory
 #
 # InterMapper looks in the Tools directory for scripts if the path isn't
 # set in the probe definition. This is also a good place to put libraries that
@@ -10,51 +10,77 @@
 # ===Parameters
 #
 # [*ensure*]
-#   works just like a file resource
+#   Same as file resource.
 #
 # [*toolname*]
-#   (namevar) The filename of the Intermapper Tool. Usually
-#   something like 'edu.ucsd.antelope.check_q330' or 'nagios_q330_ping'
+#   (namevar) The filename of the InterMapper Tools definition. Usually
+#   something like 'edu.ucsd.antelope.check_q330'
 #
-# [*target*]
-#   If ensure is set to link, then link_target is used as the target parameter
-#   for the underlying file resource. This attribute is mutually exclusive with
-#   source and content.
-#
-# [*source*]
-#   The source for the file, as a Puppet resource path. This attribute is
-#   mutally exclusive with soruce and target.
-#
-# [*content*]
-#   The desired contents of a file, as a string. This attribute is mutually
-#   exclusive with source and target.
-#
-# [*mode*]
-#   File mode, same format as a file resource.
-#
-define intermapper::tool (
-  $toolname = $title,
-  $ensure = 'present',
-  $target = undef,
-  $source = undef,
-  $content = undef,
-  $force = undef,
-  $mode = undef,
+# [*all other parameters*]
+#   Same as file resource per https://puppet.com/docs/puppet/5.5/types/file.html
+define intermapper::tool(
+  Enum['file', 'directory', 'link', 'absent'] $ensure = 'file',
+  String $toolname = $title,
+  Optional $backup = undef,
+  Optional $checksum = undef,
+  Optional $checksum_value = undef,
+  Optional[String] $content = undef,
+  Variant[Boolean,Enum['yes','no'],Undef] $force = undef,
+  Optional $ignore = undef,
+  Optional[Enum['follow','manage']] $links = undef,
+  Optional[String] $mode = '0644',
+  Optional[Stdlib::Absolutepath] $path = undef,
+  Optional $provider = undef,
+  Variant[Boolean,Enum['yes','no'],Undef] $purge = undef,
+  Variant[Boolean,Enum['remote'],Undef] $recurse = undef,
+  Optional $recurselimit = undef,
+  Variant[Boolean,Enum['yes','no'],Undef] $replace = undef,
+  Optional[Boolean] $selinux_ignore_defaults = undef,
+  Optional $selrange = undef,
+  Optional $selrole = undef,
+  Optional $seltype = undef,
+  Optional $seluser = undef,
+  Variant[Boolean,Enum['yes','no'],Undef] $show_diff = undef,
+  Optional[String] $source = undef,
+  Optional[Enum['use','use_when_creating','ignore']] $source_permissions = undef,
+  Optional[Enum['first','all']] $sourceselect = undef,
+  Optional[String] $target = undef,
+  Optional $validate_cmd = undef,
+  Optional $validate_replacement = undef,
 ) {
   include 'intermapper'
 
-  $toolsdir = "${intermapper::settingsdir}/Tools"
-
-  file { "${toolsdir}/${toolname}" :
-    ensure  => $ensure,
-    target  => $target,
-    source  => $source,
-    content => $content,
-    force   => $force,
-    mode    => $mode,
-    owner   => $intermapper::owner,
-    group   => $intermapper::group,
-    require => Class['intermapper::install'],
-    notify  => Class['intermapper::service'],
+  file { "${intermapper::settingsdir}/Tools/${toolname}":
+    ensure                  => $ensure,
+    backup                  => $backup,
+    checksum                => $checksum,
+    checksum_value          => $checksum_value,
+    content                 => $content,
+    force                   => $force,
+    group                   => $intermapper::group,
+    ignore                  => $ignore,
+    links                   => $links,
+    mode                    => $mode,
+    owner                   => $intermapper::owner,
+    path                    => $path,
+    provider                => $provider,
+    purge                   => $purge,
+    recurse                 => $recurse,
+    recurselimit            => $recurselimit,
+    replace                 => $replace,
+    selinux_ignore_defaults => $selinux_ignore_defaults,
+    selrange                => $selrange,
+    selrole                 => $selrole,
+    seltype                 => $seltype,
+    seluser                 => $seluser,
+    show_diff               => $show_diff,
+    source                  => $source,
+    source_permissions      => $source_permissions,
+    sourceselect            => $sourceselect,
+    target                  => $target,
+    validate_cmd            => $validate_cmd,
+    validate_replacement    => $validate_replacement,
+    require                 => Class['intermapper::install'],
+    notify                  => Class['intermapper::service'],
   }
 }
