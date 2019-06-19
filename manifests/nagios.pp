@@ -8,7 +8,13 @@ class intermapper::nagios {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  $manage_ensure = $intermapper::nagios_ensure ? {
+  if $intermapper::nagios_manage
+  and $intermapper::nagios_ensure == 'present'
+  and $intermapper::nagios_plugins_dir == undef {
+    fail('nagios_plugins_dir must be specified when nagios_ensure is "present"')
+  }
+
+  $_ensure = $intermapper::nagios_ensure ? {
     'present' => 'link',
     default   => $intermapper::nagios_ensure,
   }
@@ -16,7 +22,7 @@ class intermapper::nagios {
   if $intermapper::nagios_manage {
     $intermapper::nagios_link_plugins.each |String $plugin| {
       intermapper::tool { $plugin :
-        ensure => $manage_ensure,
+        ensure => $_ensure,
         target => "${intermapper::nagios_plugins_dir}/${plugin}",
       }
     }

@@ -1,6 +1,5 @@
 require 'spec_helper' # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 describe 'intermapper::service_limits', type: :define do
   let :pre_condition do
     'class { intermapper: intermapper_service_limits => {}, }'
@@ -11,73 +10,59 @@ describe 'intermapper::service_limits', type: :define do
       let :title do
         'foo'
       end
-      it do should_not compile end
+
+      it do is_expected.not_to compile end
       it do
-        is_expected.to raise_error(Puppet::Error, /Error.+got 'foo'/)
+        is_expected.to raise_error(Puppet::Error, %r{Error.+got 'foo'})
       end
     end
 
-    %w[intermapperd imdc imflows].each do |title|
+    ['intermapperd', 'imdc', 'imflows'].each do |title|
       describe "title is #{title}" do
         let :title do
           title
         end
-        it do should compile end
+
+        it do is_expected.to compile end
         it do
-          should contain_file(
-            "/etc/systemd/system/#{title}.service.d"
-          ).with(
-            ensure: 'directory'
-          )
+          is_expected.to contain_file("/etc/systemd/system/#{title}.service.d").with_ensure('directory')
         end
 
         it do
-          should contain_file(
-            "/etc/systemd/system/#{title}.service.d/limits.conf"
-          ).with(
+          is_expected.to contain_file("/etc/systemd/system/#{title}.service.d/limits.conf").with(
             ensure: 'file',
             owner: 'root',
             group: 'root',
-            content: /\[Service\]$/
+            content: %r{\[Service\]$},
           )
         end
 
         it do
-          should contain_exec(
-            "#{title} systemctl daemon-reload"
-          ).with(
+          is_expected.to contain_exec("#{title} systemctl daemon-reload").with(
             command: 'systemctl daemon-reload',
             path: ['/sbin', '/bin', '/usr/sbin', '/usr/bin'],
-            refreshonly: true
+            refreshonly: true,
           ).that_subscribes_to(
-            "File[/etc/systemd/system/#{title}.service.d]"
+            "File[/etc/systemd/system/#{title}.service.d]",
           ).that_subscribes_to(
-            "File[/etc/systemd/system/#{title}.service.d/limits.conf]"
+            "File[/etc/systemd/system/#{title}.service.d/limits.conf]",
           )
         end
 
         case title
         when 'intermapperd' then
           it do
-            should contain_file(
-              "/etc/systemd/system/#{title}.service.d"
-            ).that_notifies('Class[intermapper::service]')
+            is_expected.to contain_file("/etc/systemd/system/#{title}.service.d").that_notifies('Class[intermapper::service]')
           end
           it do
-            should contain_file(
-              "/etc/systemd/system/#{title}.service.d/limits.conf"
-            ).that_notifies('Class[intermapper::service]')
+            is_expected.to contain_file("/etc/systemd/system/#{title}.service.d/limits.conf").that_notifies('Class[intermapper::service]')
           end
         else
           it do
-            should contain_file(
-              "/etc/systemd/system/#{title}.service.d"
-            ).that_notifies('Class[intermapper::service_extra]')
+            is_expected.to contain_file("/etc/systemd/system/#{title}.service.d").that_notifies('Class[intermapper::service_extra]')
           end
           it do
-            should contain_file(
-              "/etc/systemd/system/#{title}.service.d/limits.conf"
-            ).that_notifies('Class[intermapper::service_extra]')
+            is_expected.to contain_file("/etc/systemd/system/#{title}.service.d/limits.conf").that_notifies('Class[intermapper::service_extra]')
           end
         end
 
@@ -99,44 +84,43 @@ describe 'intermapper::service_limits', type: :define do
               limitmsgqueue: 819_200,
               limitnice: 0,
               limitrtprio: 0,
-              limitrttime: 'infinity'
+              limitrttime: 'infinity',
             }
           end
+
           it do
-            should contain_file(
-              "/etc/systemd/system/#{title}.service.d/limits.conf"
+            is_expected.to contain_file("/etc/systemd/system/#{title}.service.d/limits.conf").with_content(
+              %r{\n LimitCPU=infinity$},
             ).with_content(
-              /\n LimitCPU=infinity$/
+              %r{\n LimitFSIZE=infinity$},
             ).with_content(
-              /\n LimitFSIZE=infinity$/
+              %r{\n LimitDATA=infinity$},
             ).with_content(
-              /\n LimitDATA=infinity$/
+              %r{\n LimitSTACK=8388608:infinity$},
             ).with_content(
-              /\n LimitSTACK=8388608:infinity$/
+              %r{\n LimitCORE=0:infinity$},
             ).with_content(
-              /\n LimitCORE=0:infinity$/
+              %r{\n LimitRSS=infinity$},
             ).with_content(
-              /\n LimitRSS=infinity$/
+              %r{\n LimitNOFILE=65536$},
             ).with_content(
-              /\n LimitNOFILE=65536$/
+              %r{\n LimitAS=infinity$},
             ).with_content(
-              /\n LimitAS=infinity$/
+              %r{\n LimitNPROC=655360$},
             ).with_content(
-              /\n LimitNPROC=655360$/
+              %r{\n LimitMEMLOCK=65536$},
             ).with_content(
-              /\n LimitMEMLOCK=65536$/
+              %r{\n LimitLOCKS=infinity$},
             ).with_content(
-              /\n LimitLOCKS=infinity$/
+              %r{\n LimitSIGPENDING=31192$},
             ).with_content(
-              /\n LimitSIGPENDING=31192$/
+              %r{\n LimitMSGQUEUE=819200$},
             ).with_content(
-              /\n LimitMSGQUEUE=819200$/
+              %r{\n LimitNICE=0$},
             ).with_content(
-              /\n LimitNICE=0$/
+              %r{\n LimitRTPRIO=0$},
             ).with_content(
-              /\n LimitRTPRIO=0$/
-            ).with_content(
-              /\n LimitRTTIME=infinity$/
+              %r{\n LimitRTTIME=infinity$},
             )
           end
         end
@@ -150,11 +134,8 @@ describe 'intermapper::service_limits', type: :define do
       let :facts do
         facts
       end
-      case facts[:os]['family']
-      when 'Debian', 'RedHat' then
-        include_context 'Supported Platform'
-      end
+
+      include_context 'Supported Platform'
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

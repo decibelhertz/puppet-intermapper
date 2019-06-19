@@ -1,18 +1,15 @@
 require 'spec_helper' # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 describe 'intermapper::icon', type: :define do
   let :title do
     'edu.ucsd.testicon'
   end
 
   shared_context 'Supported Platform' do
-    it do should compile end
-    it do should contain_class('intermapper') end
+    it do is_expected.to compile end
+    it do is_expected.to contain_class('intermapper') end
     it do
-      should contain_file(
-        '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-      ).with(
+      is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with(
         ensure: 'file',
         backup: nil,
         checksum: nil,
@@ -41,27 +38,22 @@ describe 'intermapper::icon', type: :define do
         sourceselect: nil,
         target: nil,
         validate_cmd: nil,
-        validate_replacement: nil
-      ).that_requires(
-        'Class[intermapper::install]'
-      ).that_notifies(
-        'Class[intermapper::service]'
-      )
+        validate_replacement: nil,
+      ).that_requires('Class[intermapper::install]').that_notifies('Class[intermapper::service]')
     end
 
     # Turn on/off a bunch of boolean params
-    %w[
-      force purge recurse replace selinux_ignore_defaults show_diff
-    ].each do |p|
+    ['force', 'purge', 'recurse', 'replace', 'selinux_ignore_defaults', 'show_diff'].each do |p|
       [true, false].each do |b|
         describe "file param '#{p}' is set to '#{b}'" do
           let :params do
-            { "#{p}": b }
+            { p => b }
           end
+
           it do
-            should contain_file(
-              '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-            ).with("#{p}": b)
+            is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with(
+              p => b,
+            )
           end
         end
       end
@@ -71,10 +63,9 @@ describe 'intermapper::icon', type: :define do
       let :params do
         { ensure: 'directory' }
       end
+
       it do
-        should contain_file(
-          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-        ).with_ensure('directory')
+        is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with_ensure('directory')
       end
     end
 
@@ -83,10 +74,9 @@ describe 'intermapper::icon', type: :define do
       let :params do
         { content: c }
       end
+
       it do
-        should contain_file(
-          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-        ).with_content(c)
+        is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with_content(c)
       end
     end
 
@@ -95,10 +85,9 @@ describe 'intermapper::icon', type: :define do
       let :params do
         { source: s }
       end
+
       it do
-        should contain_file(
-          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-        ).with_source(s)
+        is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with_source(s)
       end
     end
 
@@ -107,10 +96,9 @@ describe 'intermapper::icon', type: :define do
       let :params do
         { mode: m }
       end
+
       it do
-        should contain_file(
-          '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-        ).with_mode(m)
+        is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with_mode(m)
       end
     end
 
@@ -121,10 +109,12 @@ describe 'intermapper::icon', type: :define do
         let :params do
           { ensure: 'link', target: tgt }
         end
+
         it do
-          should contain_file(
-            '/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon'
-          ).with(ensure: 'link', target: tgt)
+          is_expected.to contain_file('/var/local/InterMapper_Settings/Custom Icons/edu.ucsd.testicon').with(
+            ensure: 'link',
+            target: tgt,
+          )
         end
       end
 
@@ -133,7 +123,8 @@ describe 'intermapper::icon', type: :define do
         let :params do
           { ensure: tgt }
         end
-        it do should_not compile end
+
+        it do is_expected.not_to compile end
       end
     end
   end
@@ -145,11 +136,8 @@ describe 'intermapper::icon', type: :define do
       let :facts do
         facts
       end
-      case facts[:os]['family']
-      when 'Debian', 'RedHat' then
-        include_context 'Supported Platform'
-      end
+
+      include_context 'Supported Platform'
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

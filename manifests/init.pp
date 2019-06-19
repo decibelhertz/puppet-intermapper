@@ -150,12 +150,13 @@
 # ===Usage
 #
 # The classes intermapper::service, intermapper::service_extra,
-# intermapper::install, intermapper::config and intermapper::nagios are not
-# intended to be called directly outside of this module. They can be used as
-# notifiers and subscription points however, so probes can be installed and the
-# Class[intermapper::service] can be set to subscribe to the probe files.
+# intermapper::install, intermapper::config and intermapper::nagios are
+# not intended to be called directly outside of this module. They can
+# be used as notifiers and subscription points however, so probes can
+# be installed and the Class[intermapper::service] can be set to
+# subscribe to the probe files.
 #
-class intermapper (
+class intermapper(
   Stdlib::Absolutepath $basedir,
   Stdlib::Absolutepath $vardir,
   Stdlib::Absolutepath $conf_file,
@@ -163,19 +164,19 @@ class intermapper (
   String $group,
   String $conf_owner,
   String $conf_group,
-  Enum[absent,latest,present] $package_ensure,
+  Enum['absent','latest','present'] $package_ensure,
   Boolean $package_manage,
   Boolean $service_manage,
   Boolean $service_imdc_manage,
   Boolean $service_imflows_manage,
-  Enum[running,stopped] $service_ensure,
-  Enum[running,stopped] $service_imdc_ensure,
-  Enum[running,stopped] $service_imflows_ensure,
+  Enum['running','stopped'] $service_ensure,
+  Enum['running','stopped'] $service_imdc_ensure,
+  Enum['running','stopped'] $service_imflows_ensure,
   String $service_name,
   String $service_imdc_name,
   String $service_imflows_name,
   Boolean $service_has_restart,
-  Enum[present,absent] $nagios_ensure,
+  Enum['present','absent'] $nagios_ensure,
   Boolean $nagios_manage,
   Array $nagios_link_plugins,
   Hash $intermapper_icons,
@@ -195,8 +196,8 @@ class intermapper (
   Optional[Stdlib::Absolutepath] $service_settingsfolder,
   Optional[String] $service_fontfolder,
   Optional[String] $service_listen,
-  Optional[Variant[Array,String]] $package_name,
-  Optional[Variant[Array,String]] $font_package_name,
+  Variant[Array,String,Undef] $package_name,
+  Variant[Array,String,Undef] $font_package_name,
   Optional[String] $package_provider,
   Optional[String] $package_source,
   Optional[String] $service_provider,
@@ -204,12 +205,6 @@ class intermapper (
   Optional[Stdlib::Absolutepath] $nagios_plugins_dir,
 ) {
   validate_re('^Linux$', $::kernel, "${::kernel} unsupported")
-
-  if $nagios_manage
-  and $nagios_ensure == 'present'
-  and $nagios_plugins_dir == undef {
-    fail('nagios_plugins_dir must be specified when nagios_ensure is "present"')
-  }
 
   $settingsdir = "${vardir}/InterMapper_Settings"
 

@@ -1,7 +1,4 @@
 ---
-# We assume we're running x86_64 hardware.
-intermapper::nagios_plugins_dir: '/usr/lib64/nagios/plugins'
-
 intermapper::service_fontfolder: '/usr/share/fonts'
 
 intermapper::font_package_name:  # several TrueType fonts for RedHat
