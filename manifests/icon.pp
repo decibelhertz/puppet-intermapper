@@ -1,7 +1,7 @@
 #
 # == define: intermapper::icon
 #
-# Install a new Intermapper icon into Intermapper's Icons directory
+# Install a new InterMapper icon into InterMapper's Icons directory
 #
 # ===Parameters
 #
@@ -9,7 +9,7 @@
 #   Same as file resource.
 #
 # [*iconname*]
-#   (namevar) The filename of the Intermapper Icons definition. Usually
+#   (namevar) The filename of the InterMapper Icons definition. Usually
 #   something like 'edu.ucsd.antelope.check_q330'
 #
 # [*all other parameters*]

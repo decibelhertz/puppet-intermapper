@@ -1,7 +1,7 @@
 #
 # == define: intermapper::probe
 #
-# Install a new Intermapper probe into Intermapper's Icons directory
+# Install a new InterMapper probe into InterMapper's Probes directory
 #
 # ===Parameters
 #
@@ -10,7 +10,7 @@
 #   so ensure => directory is not permitted.
 #
 # [*probename*]
-#   (namevar) The filename of the Intermapper Icons definition. Usually
+#   (namevar) The filename of the InterMapper Probes definition. Usually
 #   something like 'edu.ucsd.antelope.check_q330'
 #
 # [*all other parameters*]

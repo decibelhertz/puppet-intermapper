@@ -1,7 +1,7 @@
 #
 # == define: intermapper::mibfile
 #
-# Install a new Intermapper mibfile into Intermapper's Icons directory
+# Install a new SNMP MIB into InterMapper's MIB Files directory
 #
 # ===Parameters
 #
@@ -10,7 +10,7 @@
 #   so ensure => directory is not permitted.
 #
 # [*mibfilename*]
-#   (namevar) The filename of the Intermapper Icons definition. Usually
+#   (namevar) The filename of the InterMapper Icons definition. Usually
 #   something like 'edu.ucsd.antelope.check_q330'
 #
 # [*all other parameters*]

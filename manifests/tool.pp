@@ -1,7 +1,11 @@
 #
 # == define: intermapper::tool
 #
-# Install a new Intermapper tool into Intermapper's Tools directory
+# Install a new InterMapper tool into InterMapper's Tools directory
+#
+# InterMapper looks in the Tools directory for scripts if the path isn't
+# set in the probe definition. This is also a good place to put libraries that
+# probes may need.
 #
 # ===Parameters
 #
@@ -9,7 +13,7 @@
 #   Same as file resource.
 #
 # [*toolname*]
-#   (namevar) The filename of the Intermapper Tools definition. Usually
+#   (namevar) The filename of the InterMapper Tools definition. Usually
 #   something like 'edu.ucsd.antelope.check_q330'
 #
 # [*all other parameters*]

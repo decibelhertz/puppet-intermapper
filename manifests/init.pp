@@ -1,11 +1,11 @@
 #
 # == Class: intermapper
 #
-# Manage the Intermapper network monitoring package by Help/Systems
+# Manage the InterMapper network monitoring package by Help/Systems
 #
 # === Parameters
 # [*basedir*]
-#   The base directory where Intermapper is installed. Defaults to /usr/local
+#   The base directory where InterMapper is installed. Defaults to /usr/local
 #   by the package. Useful if the package has been relocated
 #
 # [*vardir*]
@@ -20,7 +20,7 @@
 #   The group of any files that this module installs. Default: intermapper
 #
 # [*package_ensure*]
-#   Defaults to 'present'. Can be set to a specific version of Intermapper,
+#   Defaults to 'present'. Can be set to a specific version of InterMapper,
 #   or to 'latest' to ensure the package is always upgraded.
 #
 # [*package_manage*]
@@ -54,7 +54,7 @@
 #   service imflows is not managed.
 #
 # [*service_imdc_ensure*]
-#   Defaults to stopped. If service_manage is true, the Intermapper Datacenter
+#   Defaults to stopped. If service_manage is true, the InterMapper Datacenter
 #   services are set to this value.
 #
 # [*service_imflows_ensure*]
@@ -73,12 +73,12 @@
 #
 # [*service_provider*]
 #   Normally undefined, this is set to 'init' on Solaris platforms since
-#   Intermapper doesn't ship with an SMF service manifest on Solaris.
+#   InterMapper doesn't ship with an SMF service manifest on Solaris.
 #
 # [*service_status_cmd*]
 #   Normally undefined, this is set to use pgrep on Solaris platforms to make
 #   up for the lack of a status action in the Solaris init script provided with
-#   Intermapper
+#   InterMapper
 #
 # [*service_has_restart*]
 #   Normally false except on Solaris. Controls the behavior of the service
@@ -122,7 +122,7 @@
 #
 # [*nagios_link_plugins*]
 #   A list of plugin names that should be symlinked from nagios_plugin_dir into
-#   $vardir/InterMapper_Settings/Tools for use by Intermapper probe definitions.
+#   $vardir/InterMapper_Settings/Tools for use by InterMapper probe definitions.
 #
 # [*nagios_plugins_package_name*]
 #   String or Array of nagios plugin packages to install, if any. Set

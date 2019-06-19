@@ -1,5 +1,5 @@
 # Plugins that should be linked from the main Nagios plugin directory
-# to Intermapper's Tools directory.
+# to InterMapper's Tools directory.
 # Requires intermapper::nagios_link_plugins and
 # intermapper::nagios_pluginsdir to be set
 class intermapper::nagios {

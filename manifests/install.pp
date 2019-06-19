@@ -1,7 +1,7 @@
 #
 # == Class: intermapper::install
 #
-# Manage the installation of Intermapper
+# Manage the installation of InterMapper
 class intermapper::install {
 
   if $caller_module_name != $module_name {
